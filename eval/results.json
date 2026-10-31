@@ -1,0 +1,1177 @@
+{
+  "timestamp": "2026-10-30T17:20:16.023559+00:00",
+  "track": "synthetic",
+  "track_name": "Synthetic Benchmark (Northwind Labs Track)",
+  "collection": "default",
+  "combined": {
+    "total_questions": 30,
+    "answerable_count": 22,
+    "unanswerable_count": 8,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 85.1,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 85.1,
+      "upper": 100.0
+    },
+    "fallback_recall": 87.5,
+    "fallback_recall_ci": {
+      "lower": 52.9,
+      "upper": 97.8
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 97.5,
+    "avg_latency_ms": 3089.7,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 823.0,
+      "generation_ms": 1966.6,
+      "retry_delay_ms": 633.3,
+      "judge_ms": 1791.6
+    }
+  },
+  "dev_split": {
+    "total_questions": 10,
+    "answerable_count": 8,
+    "unanswerable_count": 2,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 67.6,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 67.6,
+      "upper": 100.0
+    },
+    "fallback_recall": 100.0,
+    "fallback_recall_ci": {
+      "lower": 34.2,
+      "upper": 100.0
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 100.0,
+    "avg_latency_ms": 2231.7,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 787.8,
+      "generation_ms": 1443.9,
+      "retry_delay_ms": 0.0,
+      "judge_ms": 1636.0
+    }
+  },
+  "test_split": {
+    "total_questions": 20,
+    "answerable_count": 14,
+    "unanswerable_count": 6,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 78.5,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 78.5,
+      "upper": 100.0
+    },
+    "fallback_recall": 83.3,
+    "fallback_recall_ci": {
+      "lower": 43.6,
+      "upper": 97.0
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 96.7,
+    "avg_latency_ms": 3518.7,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 840.7,
+      "generation_ms": 2228.0,
+      "retry_delay_ms": 950.0,
+      "judge_ms": 1869.3
+    }
+  },
+  "config": {
+    "retrieval_threshold": 0.55,
+    "top_k": 5,
+    "llm_model": "gemini-flash-lite-latest",
+    "embedding_model": "gemini-embedding-001"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "How many days of paid vacation do new employees receive per year?",
+      "is_answerable": true,
+      "expected_answer": "New employees receive 18 days of paid vacation per year, accrued at 1.5 days per month.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 2,
+      "actual_answer": "New employees accrue 18 days of paid vacation per year, calculated at a rate of 1.5 days per month of active service [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 2,
+          "snippet": "TO) & Vacation Accrual\nNorthwind Labs values work-life balance and provides generous paid vacation for full-time staff. New\nemployees accrue 18 days of paid vacation per year, calculated at a rate of "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7789,
+      "latency_ms": 2898.74,
+      "latency_breakdown": {
+        "retrieval_ms": 1087.54,
+        "generation_ms": 1811.17,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1635.1,
+        "pipeline_total_ms": 2898.74,
+        "eval_total_ms": 4533.84
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 2,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How long is the initial probationary period for new hires at Northwind Labs?",
+      "is_answerable": true,
+      "expected_answer": "The initial probationary period is 90 calendar days.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 1,
+      "actual_answer": "All new hires undergo an initial 90-calendar-day probationary period [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 1,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 1\nNorthwind Labs Employee Handbook\nVersion 4.2 | Effective January 1, 2026\n1. Welcome & Workplace Principles\nWelc"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8432,
+      "latency_ms": 2273.95,
+      "latency_breakdown": {
+        "retrieval_ms": 653.07,
+        "generation_ms": 1620.85,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 977.51,
+        "pipeline_total_ms": 2273.95,
+        "eval_total_ms": 3251.46
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 3,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What are the core collaboration hours when employees must be online?",
+      "is_answerable": true,
+      "expected_answer": "Core collaborative hours are from 10:00 AM to 4:00 PM EST, Monday through Friday.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 1,
+      "actual_answer": "All full-time employees are required to be accessible and available during core collaborative hours from 10:00 AM to 4:00 PM EST, Monday through Friday [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 1,
+          "snippet": "eriod. During this period, performance and\ncultural fit are reviewed at 30, 60, and 90-day intervals with your manager. Satisfactory completion of the\n90-day probationary period confirms regular full-"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7229,
+      "latency_ms": 1985.89,
+      "latency_breakdown": {
+        "retrieval_ms": 650.91,
+        "generation_ms": 1334.95,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1102.46,
+        "pipeline_total_ms": 1985.89,
+        "eval_total_ms": 3088.35
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 4,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many days per week are hybrid employees permitted to work remotely?",
+      "is_answerable": true,
+      "expected_answer": "Eligible hybrid employees may work remotely up to 2 days per week (typically Tuesdays and Thursdays).",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 2,
+      "actual_answer": "Employees in eligible hybrid roles are permitted to work remotely up to 2 days per week [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 2,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 2\nNorthwind Labs Employee Handbook\n4. Remote Work & Hybrid Telecommuting Policy\nEmployees in eligible hybrid role"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.6984,
+      "latency_ms": 2338.01,
+      "latency_breakdown": {
+        "retrieval_ms": 609.32,
+        "generation_ms": 1728.67,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1421.99,
+        "pipeline_total_ms": 2338.01,
+        "eval_total_ms": 3760.0
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 5,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What is the minimum internet speed required for remote workers?",
+      "is_answerable": true,
+      "expected_answer": "Remote employees must have an internet connection with a minimum download speed of 50 Mbps.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 2,
+      "actual_answer": "Remote employees must maintain an internet connection with a verified minimum download speed of 50 Mbps [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 2,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 2\nNorthwind Labs Employee Handbook\n4. Remote Work & Hybrid Telecommuting Policy\nEmployees in eligible hybrid role"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.6395,
+      "latency_ms": 2820.71,
+      "latency_breakdown": {
+        "retrieval_ms": 689.04,
+        "generation_ms": 2131.63,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 2342.48,
+        "pipeline_total_ms": 2820.71,
+        "eval_total_ms": 5163.19
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 6,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many unused vacation days can be rolled over to the next calendar year?",
+      "is_answerable": true,
+      "expected_answer": "A maximum of 5 unused vacation days may be rolled over into the following year.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 2,
+      "actual_answer": "A maximum of 5 unused vacation days may be rolled over into the subsequent calendar year [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 2,
+          "snippet": "TO) & Vacation Accrual\nNorthwind Labs values work-life balance and provides generous paid vacation for full-time staff. New\nemployees accrue 18 days of paid vacation per year, calculated at a rate of "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7333,
+      "latency_ms": 3609.87,
+      "latency_breakdown": {
+        "retrieval_ms": 654.39,
+        "generation_ms": 2955.45,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 944.66,
+        "pipeline_total_ms": 3609.87,
+        "eval_total_ms": 4554.53
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 7,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many paid sick days do full-time employees receive annually?",
+      "is_answerable": true,
+      "expected_answer": "Full-time employees receive 10 paid sick days per year, credited upfront on January 1.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 3,
+      "actual_answer": "All full-time employees receive 10 paid sick days per year, which are credited upfront on January 1 of each calendar year [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 3,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 3\nNorthwind Labs Employee Handbook\n7. Paid Sick Leave Policy\nAll full-time employees receive 10 paid sick days pe"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7416,
+      "latency_ms": 2729.72,
+      "latency_breakdown": {
+        "retrieval_ms": 1025.63,
+        "generation_ms": 1704.06,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 784.24,
+        "pipeline_total_ms": 2729.72,
+        "eval_total_ms": 3513.96
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 8,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "When is a doctor's note required for consecutive sick leave absences?",
+      "is_answerable": true,
+      "expected_answer": "A doctor's note from a licensed healthcare provider is required for consecutive sick absences exceeding 3 business days.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 3,
+      "actual_answer": "Consecutive sick leave absences exceeding 3 business days require documentation from a licensed healthcare provider [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 3,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 3\nNorthwind Labs Employee Handbook\n7. Paid Sick Leave Policy\nAll full-time employees receive 10 paid sick days pe"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.6769,
+      "latency_ms": 2324.92,
+      "latency_breakdown": {
+        "retrieval_ms": 655.27,
+        "generation_ms": 1669.61,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 968.64,
+        "pipeline_total_ms": 2324.92,
+        "eval_total_ms": 3293.56
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 9,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many weeks of paid parental leave do primary caregivers receive?",
+      "is_answerable": true,
+      "expected_answer": "Primary caregivers receive 12 weeks of fully paid parental leave (after 6 months of service).",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 3,
+      "actual_answer": "Primary caregivers receive 12 weeks of fully paid parental leave following the birth, adoption, or foster placement of a child [1], [2]. To qualify, employees must have completed a minimum of 6 months of continuous full-time service prior to the qualifying event [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 3,
+          "snippet": "eeks of fully paid parental leave for primary caregivers following the birth,\nadoption, or foster placement of a child. Secondary caregivers are entitled to 6 weeks of fully paid parental\nleave. To qu"
+        },
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 3,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 3\nNorthwind Labs Employee Handbook\n7. Paid Sick Leave Policy\nAll full-time employees receive 10 paid sick days pe"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.78,
+      "latency_ms": 7168.54,
+      "latency_breakdown": {
+        "retrieval_ms": 577.28,
+        "generation_ms": 3591.24,
+        "retry_count": 2,
+        "retry_delay_ms": 8000.0,
+        "judge_ms": 6572.24,
+        "pipeline_total_ms": 7168.54,
+        "eval_total_ms": 13740.78
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-3-flash-preview",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 10,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many days of paid bereavement leave are provided for immediate family members?",
+      "is_answerable": true,
+      "expected_answer": "Up to 5 consecutive paid business days for immediate family members.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 4,
+      "actual_answer": "Employees are eligible for up to 5 consecutive paid business days of bereavement leave for the death of an immediate family member [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 4,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 4\nNorthwind Labs Employee Handbook\n10. Bereavement Leave\nEmployees are eligible for up to 5 consecutive paid busi"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7474,
+      "latency_ms": 2005.49,
+      "latency_breakdown": {
+        "retrieval_ms": 953.18,
+        "generation_ms": 1052.29,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 5429.83,
+        "pipeline_total_ms": 2005.49,
+        "eval_total_ms": 7435.32
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 11,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How much paid leave does Northwind Labs provide for jury duty?",
+      "is_answerable": true,
+      "expected_answer": "Up to 2 weeks (10 business days) of fully paid leave for jury duty service.",
+      "expected_file": "Northwind_Labs_Employee_Handbook.pdf",
+      "expected_page": 4,
+      "actual_answer": "Northwind Labs provides up to 2 weeks (10 business days) of fully paid leave for employees summoned to jury duty service [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 4,
+          "snippet": "NORTHWIND LABS  |  EMPLOYEE HANDBOOK\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 4\nNorthwind Labs Employee Handbook\n10. Bereavement Leave\nEmployees are eligible for up to 5 consecutive paid busi"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8459,
+      "latency_ms": 6817.92,
+      "latency_breakdown": {
+        "retrieval_ms": 994.62,
+        "generation_ms": 5823.26,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 873.7,
+        "pipeline_total_ms": 6817.92,
+        "eval_total_ms": 7691.62
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 12,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What is the individual deductible under the Premier PPO medical plan?",
+      "is_answerable": true,
+      "expected_answer": "The individual annual in-network deductible is $500 ($1,000 for families).",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 1,
+      "actual_answer": "Under the Premier PPO Plan, the individual annual in-network deductible is $500 [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 1,
+          "snippet": "NORTHWIND LABS  |  BENEFITS GUIDE\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 1\nNorthwind Labs Benefits Guide\nPlan Year 2026 | Total Rewards & Health Overview\n1. Health & Medical Coverage Plans\n"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7256,
+      "latency_ms": 1845.29,
+      "latency_breakdown": {
+        "retrieval_ms": 651.4,
+        "generation_ms": 1193.86,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 838.75,
+        "pipeline_total_ms": 1845.29,
+        "eval_total_ms": 2684.04
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 13,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How much does the company contribute annually to an individual HSA under the HDHP?",
+      "is_answerable": true,
+      "expected_answer": "Northwind Labs contributes $750 per year for individual coverage ($1,500 for families) in quarterly installments.",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 1,
+      "actual_answer": "Northwind Labs contributes $750 per year to an individual Health Savings Account (HSA) [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 1,
+          "snippet": "e office visits require a $25 copay, specialist visits require a $40 copay, and\nurgent care visits require a $50 copay. Generic prescription drugs carry a $10 copay, preferred brand names\ncarry a $30 "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8028,
+      "latency_ms": 2561.63,
+      "latency_breakdown": {
+        "retrieval_ms": 934.2,
+        "generation_ms": 1627.4,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 3460.13,
+        "pipeline_total_ms": 2561.63,
+        "eval_total_ms": 6021.76
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 14,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What percentage does Northwind Labs match on employee 401(k) contributions?",
+      "is_answerable": true,
+      "expected_answer": "Northwind Labs matches 100% of employee contributions up to 5% of eligible base salary.",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 3,
+      "actual_answer": "Northwind Labs offers a 100% employer match on employee contributions up to 5% of eligible annual base salary [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 3,
+          "snippet": "NORTHWIND LABS  |  BENEFITS GUIDE\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 3\nNorthwind Labs Benefits Guide\n7. 401(k) Retirement Savings & Employer Matching\nOur 401(k) retirement plan is admin"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8512,
+      "latency_ms": 2338.17,
+      "latency_breakdown": {
+        "retrieval_ms": 996.97,
+        "generation_ms": 1341.12,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 5106.18,
+        "pipeline_total_ms": 2338.17,
+        "eval_total_ms": 7444.35
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 15,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the vesting schedule for employer 401(k) matching contributions?",
+      "is_answerable": true,
+      "expected_answer": "Employer matching contributions feature 100% immediate vesting from day one of employment.",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 3,
+      "actual_answer": "Employer matching contributions feature 100% immediate vesting from day one of employment, meaning there is no vesting schedule [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 3,
+          "snippet": "NORTHWIND LABS  |  BENEFITS GUIDE\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 3\nNorthwind Labs Benefits Guide\n7. 401(k) Retirement Savings & Employer Matching\nOur 401(k) retirement plan is admin"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7175,
+      "latency_ms": 2253.88,
+      "latency_breakdown": {
+        "retrieval_ms": 974.97,
+        "generation_ms": 1278.87,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 704.84,
+        "pipeline_total_ms": 2253.88,
+        "eval_total_ms": 2958.72
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 16,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What is the monthly reimbursement amount for the wellness and fitness stipend?",
+      "is_answerable": true,
+      "expected_answer": "$75 per month (up to a $900 annual maximum).",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 3,
+      "actual_answer": "The monthly wellness reimbursement stipend is $75 per month [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 3,
+          "snippet": "loyer matching\ncontributions feature 100% immediate vesting from day one of employment\u2014there is no vesting schedule.\n8. Wellness & Fitness Monthly Stipend\nTo support holistic health, Northwind Labs pr"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7828,
+      "latency_ms": 2044.87,
+      "latency_breakdown": {
+        "retrieval_ms": 960.48,
+        "generation_ms": 1084.36,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 3464.3,
+        "pipeline_total_ms": 2044.87,
+        "eval_total_ms": 5509.17
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 17,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the annual reimbursement limit for tuition and professional learning?",
+      "is_answerable": true,
+      "expected_answer": "Up to $5,250 per calendar year for pre-approved courses with a grade of B or higher.",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 4,
+      "actual_answer": "Northwind Labs offers up to $5,250 per calendar year in tuition and educational reimbursement [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 4,
+          "snippet": "NORTHWIND LABS  |  BENEFITS GUIDE\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 4\nNorthwind Labs Benefits Guide\n10. Tuition & Professional Learning Reimbursement\nNorthwind Labs invests actively in"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7239,
+      "latency_ms": 4684.78,
+      "latency_breakdown": {
+        "retrieval_ms": 747.67,
+        "generation_ms": 3937.09,
+        "retry_count": 1,
+        "retry_delay_ms": 5000.0,
+        "judge_ms": 6645.47,
+        "pipeline_total_ms": 4684.78,
+        "eval_total_ms": 11330.25
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 18,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many free counseling sessions are provided through Lyra Health EAP?",
+      "is_answerable": true,
+      "expected_answer": "Up to 6 confidential, fully covered mental health counseling sessions per issue per calendar year.",
+      "expected_file": "Northwind_Labs_Benefits_Guide.pdf",
+      "expected_page": 4,
+      "actual_answer": "Employees and their immediate household members are entitled to up to 6 confidential, fully covered mental health counseling sessions per issue per calendar year through Lyra Health [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Benefits_Guide.pdf",
+          "page": 4,
+          "snippet": "manager and HR prior to enrollment, and you must achieve a grade of 'B' or better (or 'Pass' in pass/fail\ngrading).\n11. Commuter & Transit Assistance\nEmployees may elect pre-tax payroll deductions up "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7676,
+      "latency_ms": 1555.16,
+      "latency_breakdown": {
+        "retrieval_ms": 644.65,
+        "generation_ms": 910.48,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 2168.78,
+        "pipeline_total_ms": 1555.16,
+        "eval_total_ms": 3723.94
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 19,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the maximum allowed value for gifts received from vendors or clients?",
+      "is_answerable": true,
+      "expected_answer": "Gifts cannot exceed $50 in estimated value. Gifts between $25 and $50 must be reported.",
+      "expected_file": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+      "expected_page": 1,
+      "actual_answer": "Employees are strictly prohibited from accepting personal gifts, entertainment, or meals from vendors, clients, or competitors that exceed $50 in estimated fair market value [1], [2].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+          "page": 1,
+          "snippet": "cepting personal gifts, entertainment, or meals from vendors, clients,\nor competitors that exceed $50 in estimated fair market value. Any business gift or meal valued between $25\nand $50 must be repor"
+        },
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+          "page": 1,
+          "snippet": "NORTHWIND LABS  |  CODE OF CONDUCT & IT SECURITY\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 1\nNorthwind Labs Code of Conduct & IT Security\nRevision 3.1 | Compliance & Information Assurance\n1. S"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7669,
+      "latency_ms": 4531.06,
+      "latency_breakdown": {
+        "retrieval_ms": 1003.89,
+        "generation_ms": 3527.13,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 3138.0,
+        "pipeline_total_ms": 4531.06,
+        "eval_total_ms": 7669.06
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 20,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What are the corporate requirements for employee password length and complexity?",
+      "is_answerable": true,
+      "expected_answer": "Minimum 14 characters including uppercase, lowercase, numbers, and symbols; rotated every 90 days.",
+      "expected_file": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+      "expected_page": 3,
+      "actual_answer": "Passwords must have a minimum length of 14 characters and combine uppercase letters, lowercase letters, numbers, and at least one special symbol [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+          "page": 3,
+          "snippet": "NORTHWIND LABS  |  CODE OF CONDUCT & IT SECURITY\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 3\nNorthwind Labs Code of Conduct & IT Security\n7. Password & Authentication Security Standards\nAll em"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7618,
+      "latency_ms": 1661.74,
+      "latency_breakdown": {
+        "retrieval_ms": 593.61,
+        "generation_ms": 1068.1,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 902.54,
+        "pipeline_total_ms": 1661.74,
+        "eval_total_ms": 2564.28
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 21,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Within how many minutes of inactivity must corporate laptops automatically lock?",
+      "is_answerable": true,
+      "expected_answer": "Laptops auto-lock after 5 minutes of inactivity.",
+      "expected_file": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+      "expected_page": 3,
+      "actual_answer": "All corporate laptops are enforced with automatic screensaver locks requiring password reentry after 5 minutes of inactivity [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+          "page": 3,
+          "snippet": "fications or hardware FIDO2 keys (YubiKey). SMS/text-based 2FA is explicitly banned due\nto SIM-swap vulnerabilities.\n8. Clean Desk & Physical Workplace Security\nEmployees must manually lock their comp"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7342,
+      "latency_ms": 2361.49,
+      "latency_breakdown": {
+        "retrieval_ms": 939.88,
+        "generation_ms": 1421.58,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 3282.77,
+        "pipeline_total_ms": 2361.49,
+        "eval_total_ms": 5644.26
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 22,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Within how many hours must a suspected security incident or breach be reported?",
+      "is_answerable": true,
+      "expected_answer": "Within 2 hours of discovery to security@northwindlabs.com or emergency hotline ext. 4357.",
+      "expected_file": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+      "expected_page": 4,
+      "actual_answer": "A suspected security incident or breach must be reported immediately, within a strict maximum window of 2 hours from discovery [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+          "page": 4,
+          "snippet": "NORTHWIND LABS  |  CODE OF CONDUCT & IT SECURITY\nCONFIDENTIAL  -  FOR INTERNAL EMPLOYEES ONLY\nPage 4\nNorthwind Labs Code of Conduct & IT Security\n10. Security Incident Reporting & Response\nRapid incid"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7254,
+      "latency_ms": 1607.46,
+      "latency_breakdown": {
+        "retrieval_ms": 651.11,
+        "generation_ms": 956.33,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 982.04,
+        "pipeline_total_ms": 1607.46,
+        "eval_total_ms": 2589.5
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 23,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What is Northwind Labs' stock ticker symbol on NASDAQ?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7099,
+      "latency_ms": 2144.0,
+      "latency_breakdown": {
+        "retrieval_ms": 660.92,
+        "generation_ms": 1483.05,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2144.0,
+        "eval_total_ms": 2144.0
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 24,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Can employees bring pet dogs into the office on Casual Fridays?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.6665,
+      "latency_ms": 1550.57,
+      "latency_breakdown": {
+        "retrieval_ms": 595.47,
+        "generation_ms": 955.07,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 1550.57,
+        "eval_total_ms": 1550.57
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 25,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the corporate reimbursement policy for business class international flights?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.6562,
+      "latency_ms": 2246.54,
+      "latency_breakdown": {
+        "retrieval_ms": 1254.13,
+        "generation_ms": 992.38,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2246.54,
+        "eval_total_ms": 2246.54
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 26,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Does Northwind Labs offer a relocation assistance package for moving to the Tokyo office?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7244,
+      "latency_ms": 2358.92,
+      "latency_breakdown": {
+        "retrieval_ms": 1029.61,
+        "generation_ms": 1329.28,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2358.92,
+        "eval_total_ms": 2358.92
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 27,
+      "split": "dev",
+      "subtype": "standard",
+      "question": "What is the personal mobile phone number of the Chief Executive Officer?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.673,
+      "latency_ms": 2252.43,
+      "latency_breakdown": {
+        "retrieval_ms": 931.73,
+        "generation_ms": 1320.66,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2252.43,
+        "eval_total_ms": 2252.43
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 28,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How much corporate discount do employees get when buying Apple MacBooks through the company store?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.646,
+      "latency_ms": 7122.65,
+      "latency_breakdown": {
+        "retrieval_ms": 956.2,
+        "generation_ms": 3166.43,
+        "retry_count": 1,
+        "retry_delay_ms": 3000.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 7122.65,
+        "eval_total_ms": 7122.65
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-3-flash-preview",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 29,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Does Northwind Labs provide free catered lunch on Wednesdays?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7618,
+      "latency_ms": 7899.19,
+      "latency_breakdown": {
+        "retrieval_ms": 977.88,
+        "generation_ms": 3921.28,
+        "retry_count": 1,
+        "retry_delay_ms": 3000.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 7899.19,
+        "eval_total_ms": 7899.19
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 30,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Can a new employee who has been with the company for only 2 months take paid parental leave?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "No, to qualify for paid parental leave, employees must have completed a minimum of 6 months of continuous full-time service prior to the qualifying event [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "Northwind_Labs_Employee_Handbook.pdf",
+          "page": 3,
+          "snippet": "eeks of fully paid parental leave for primary caregivers following the birth,\nadoption, or foster placement of a child. Secondary caregivers are entitled to 6 weeks of fully paid parental\nleave. To qu"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 0,
+      "citation_correct": 0,
+      "gating_score": 0.7504,
+      "latency_ms": 2697.24,
+      "latency_breakdown": {
+        "retrieval_ms": 636.18,
+        "generation_ms": 2061.04,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2697.24,
+        "eval_total_ms": 2697.24
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "False Positive (Failed to Abstain): Question 30 was expected to trigger fallback, but the system generated an answer (model gemini-flash-lite-latest). Gating similarity score 0.7504 exceeded threshold 0.55, and Layer 2 grounding did not recognize out-of-scope/false-premise boundaries."
+    }
+  ]
+}

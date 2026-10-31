@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  policypilot-backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      # Model names: see https://ai.google.dev/gemini-api/docs/models
+      - GEMINI_LLM_MODEL=${GEMINI_LLM_MODEL:-gemini-flash-lite-latest}
+      - EMBEDDINGS_PROVIDER=${EMBEDDINGS_PROVIDER:-gemini}
+      - GEMINI_EMBEDDING_MODEL=${GEMINI_EMBEDDING_MODEL:-gemini-embedding-001}
+      # Retrieval — threshold tuned on 10-question dev split
+      - RETRIEVAL_SIMILARITY_THRESHOLD=${RETRIEVAL_SIMILARITY_THRESHOLD:-0.55}
+      - TOP_K_RETRIEVAL=${TOP_K_RETRIEVAL:-5}
+      - RRF_K=${RRF_K:-60}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-change_me_in_env}
+      - SQLITE_DB_PATH=/app/data/policypilot.db
+      - CHROMA_PERSIST_DIR=/app/data/chroma
+    volumes:
+      - policypilot_data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  policypilot-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      policypilot-backend:
+        condition: service_healthy
+
+volumes:
+  policypilot_data:

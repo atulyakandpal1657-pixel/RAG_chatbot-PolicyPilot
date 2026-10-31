@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "question": "How many days of paid vacation do new employees receive per year?",
+    "expected_answer": "New employees receive 18 days of paid vacation per year, accrued at 1.5 days per month.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 2
+  },
+  {
+    "id": 2,
+    "question": "How long is the initial probationary period for new hires at Northwind Labs?",
+    "expected_answer": "The initial probationary period is 90 calendar days.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 1
+  },
+  {
+    "id": 3,
+    "question": "What are the core collaboration hours when employees must be online?",
+    "expected_answer": "Core collaborative hours are from 10:00 AM to 4:00 PM EST, Monday through Friday.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 1
+  },
+  {
+    "id": 4,
+    "question": "How many days per week are hybrid employees permitted to work remotely?",
+    "expected_answer": "Eligible hybrid employees may work remotely up to 2 days per week (typically Tuesdays and Thursdays).",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 2
+  },
+  {
+    "id": 5,
+    "question": "What is the minimum internet speed required for remote workers?",
+    "expected_answer": "Remote employees must have an internet connection with a minimum download speed of 50 Mbps.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 2
+  },
+  {
+    "id": 6,
+    "question": "How many unused vacation days can be rolled over to the next calendar year?",
+    "expected_answer": "A maximum of 5 unused vacation days may be rolled over into the following year.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 2
+  },
+  {
+    "id": 7,
+    "question": "How many paid sick days do full-time employees receive annually?",
+    "expected_answer": "Full-time employees receive 10 paid sick days per year, credited upfront on January 1.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 8,
+    "question": "When is a doctor's note required for consecutive sick leave absences?",
+    "expected_answer": "A doctor's note from a licensed healthcare provider is required for consecutive sick absences exceeding 3 business days.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 9,
+    "question": "How many weeks of paid parental leave do primary caregivers receive?",
+    "expected_answer": "Primary caregivers receive 12 weeks of fully paid parental leave (after 6 months of service).",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 10,
+    "question": "How many days of paid bereavement leave are provided for immediate family members?",
+    "expected_answer": "Up to 5 consecutive paid business days for immediate family members.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 4
+  },
+  {
+    "id": 11,
+    "question": "How much paid leave does Northwind Labs provide for jury duty?",
+    "expected_answer": "Up to 2 weeks (10 business days) of fully paid leave for jury duty service.",
+    "source_filename": "Northwind_Labs_Employee_Handbook.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 4
+  },
+  {
+    "id": 12,
+    "question": "What is the individual deductible under the Premier PPO medical plan?",
+    "expected_answer": "The individual annual in-network deductible is $500 ($1,000 for families).",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 1
+  },
+  {
+    "id": 13,
+    "question": "How much does the company contribute annually to an individual HSA under the HDHP?",
+    "expected_answer": "Northwind Labs contributes $750 per year for individual coverage ($1,500 for families) in quarterly installments.",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 1
+  },
+  {
+    "id": 14,
+    "question": "What percentage does Northwind Labs match on employee 401(k) contributions?",
+    "expected_answer": "Northwind Labs matches 100% of employee contributions up to 5% of eligible base salary.",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 15,
+    "question": "What is the vesting schedule for employer 401(k) matching contributions?",
+    "expected_answer": "Employer matching contributions feature 100% immediate vesting from day one of employment.",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 16,
+    "question": "What is the monthly reimbursement amount for the wellness and fitness stipend?",
+    "expected_answer": "$75 per month (up to a $900 annual maximum).",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 17,
+    "question": "What is the annual reimbursement limit for tuition and professional learning?",
+    "expected_answer": "Up to $5,250 per calendar year for pre-approved courses with a grade of B or higher.",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 4
+  },
+  {
+    "id": 18,
+    "question": "How many free counseling sessions are provided through Lyra Health EAP?",
+    "expected_answer": "Up to 6 confidential, fully covered mental health counseling sessions per issue per calendar year.",
+    "source_filename": "Northwind_Labs_Benefits_Guide.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 4
+  },
+  {
+    "id": 19,
+    "question": "What is the maximum allowed value for gifts received from vendors or clients?",
+    "expected_answer": "Gifts cannot exceed $50 in estimated value. Gifts between $25 and $50 must be reported.",
+    "source_filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 1
+  },
+  {
+    "id": 20,
+    "question": "What are the corporate requirements for employee password length and complexity?",
+    "expected_answer": "Minimum 14 characters including uppercase, lowercase, numbers, and symbols; rotated every 90 days.",
+    "source_filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+    "split": "dev",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 21,
+    "question": "Within how many minutes of inactivity must corporate laptops automatically lock?",
+    "expected_answer": "Laptops auto-lock after 5 minutes of inactivity.",
+    "source_filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 3
+  },
+  {
+    "id": 22,
+    "question": "Within how many hours must a suspected security incident or breach be reported?",
+    "expected_answer": "Within 2 hours of discovery to security@northwindlabs.com or emergency hotline ext. 4357.",
+    "source_filename": "Northwind_Labs_Code_of_Conduct_and_IT_Security.pdf",
+    "split": "test",
+    "is_answerable": true,
+    "source_page": 4
+  },
+  {
+    "id": 23,
+    "question": "What is Northwind Labs' stock ticker symbol on NASDAQ?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "dev",
+    "is_answerable": false
+  },
+  {
+    "id": 24,
+    "question": "Can employees bring pet dogs into the office on Casual Fridays?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false
+  },
+  {
+    "id": 25,
+    "question": "What is the corporate reimbursement policy for business class international flights?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false
+  },
+  {
+    "id": 26,
+    "question": "Does Northwind Labs offer a relocation assistance package for moving to the Tokyo office?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false
+  },
+  {
+    "id": 27,
+    "question": "What is the personal mobile phone number of the Chief Executive Officer?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "dev",
+    "is_answerable": false
+  },
+  {
+    "id": 28,
+    "question": "How much corporate discount do employees get when buying Apple MacBooks through the company store?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false
+  },
+  {
+    "id": 29,
+    "question": "Does Northwind Labs provide free catered lunch on Wednesdays?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false
+  },
+  {
+    "id": 30,
+    "question": "Can a new employee who has been with the company for only 2 months take paid parental leave?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false
+  }
+]

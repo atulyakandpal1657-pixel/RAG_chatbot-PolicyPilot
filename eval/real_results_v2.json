@@ -1,0 +1,416 @@
+{
+  "timestamp": "2026-10-30T17:22:44.518724+00:00",
+  "track": "real_v2",
+  "track_name": "Real-World Benchmark Track Pass 2 (real_questions_v2.json)",
+  "collection": "real_docs",
+  "combined": {
+    "total_questions": 10,
+    "answerable_count": 5,
+    "unanswerable_count": 5,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 56.6,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 56.6,
+      "upper": 100.0
+    },
+    "fallback_recall": 100.0,
+    "fallback_recall_ci": {
+      "lower": 56.6,
+      "upper": 100.0
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 100.0,
+    "avg_latency_ms": 2566.2,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 759.8,
+      "generation_ms": 1506.3,
+      "retry_delay_ms": 300.0,
+      "judge_ms": 599.0
+    }
+  },
+  "dev_split": null,
+  "test_split": {
+    "total_questions": 10,
+    "answerable_count": 5,
+    "unanswerable_count": 5,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 56.6,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 56.6,
+      "upper": 100.0
+    },
+    "fallback_recall": 100.0,
+    "fallback_recall_ci": {
+      "lower": 56.6,
+      "upper": 100.0
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 100.0,
+    "avg_latency_ms": 2566.2,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 759.8,
+      "generation_ms": 1506.3,
+      "retry_delay_ms": 300.0,
+      "judge_ms": 599.0
+    }
+  },
+  "config": {
+    "retrieval_threshold": 0.55,
+    "top_k": 5,
+    "llm_model": "gemini-flash-lite-latest",
+    "embedding_model": "gemini-embedding-001"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "split": "test",
+      "subtype": "paraphrased_indirect",
+      "question": "At what age are university faculty members required to retire compared to staff in central government ministries?",
+      "is_answerable": true,
+      "expected_answer": "62 years for university faculty (teachers), compared to 60 years for central government employees",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 8,
+      "actual_answer": "The fifth central pay commission has fixed 60 years for the retirement of central government employees and 62 years for university teachers [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 8,
+          "snippet": "f leave in addition to encashment on superannuation is likely to \nreduce absenteeism and improve overall productivity. \n9.3.2  Retirement Benefits  \nMost of the employees join government service at a "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.721,
+      "latency_ms": 5892.82,
+      "latency_breakdown": {
+        "retrieval_ms": 644.92,
+        "generation_ms": 2247.87,
+        "retry_count": 1,
+        "retry_delay_ms": 3000.0,
+        "judge_ms": 1663.49,
+        "pipeline_total_ms": 5892.82,
+        "eval_total_ms": 7556.31
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 2,
+      "split": "test",
+      "subtype": "paraphrased_indirect",
+      "question": "Can an employee who served for seven years qualify for a central government retirement pension?",
+      "is_answerable": true,
+      "expected_answer": "No, a minimum of ten years of qualifying service is required to receive a government pension.",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 11,
+      "actual_answer": "No, pension under government is payable to those who have rendered a minimum of ten years qualifying service [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 11,
+          "snippet": "Reduction of pension for unsatisfactory service: Rule 6 provides for such reduction by \nthe appointing authority after giving opportunity to the employee to make his \nrepresentation against the propos"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7697,
+      "latency_ms": 2355.04,
+      "latency_breakdown": {
+        "retrieval_ms": 904.36,
+        "generation_ms": 1450.65,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1093.68,
+        "pipeline_total_ms": 2355.04,
+        "eval_total_ms": 3448.72
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 3,
+      "split": "test",
+      "subtype": "paraphrased_indirect",
+      "question": "What is the statutory ceiling on gratuity payments under the 1972 Gratuity Act?",
+      "is_answerable": true,
+      "expected_answer": "Rs two lakh (calculated at fifteen days' wages per completed year of service)",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 12,
+      "actual_answer": "The Payment of Gratuity Act, 1972 provides for payment of gratuity subject to a maximum of rupees two lakh [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "For the purposes calculating the period of employment, periods of maternity leave are \nincluded provided that the total period of such maternity leave does not exceed twelve \nweeks. The Payment of Gra"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7827,
+      "latency_ms": 2093.02,
+      "latency_breakdown": {
+        "retrieval_ms": 926.73,
+        "generation_ms": 1166.25,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 803.09,
+        "pipeline_total_ms": 2093.02,
+        "eval_total_ms": 2896.11
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 4,
+      "split": "test",
+      "subtype": "paraphrased_indirect",
+      "question": "How much monthly compensation do pensioners living outside Central Government Health Scheme areas receive for medical expenses?",
+      "is_answerable": true,
+      "expected_answer": "Rs 100 per month",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 12,
+      "actual_answer": "For pensioners not covered by the Central Government Health Scheme (CGHS), the Fifth Pay Commission suggested a medical allowance of Rs. 100 per month [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "oval of the cash ceiling and 2) computation of gratuity on pay \nplus the Dearness Allowance on the date of retirement. \nThe Fifth Pay Commission found considerable ad hocism in the treatment of employ"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.756,
+      "latency_ms": 2029.18,
+      "latency_breakdown": {
+        "retrieval_ms": 619.86,
+        "generation_ms": 1409.29,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 756.27,
+        "pipeline_total_ms": 2029.18,
+        "eval_total_ms": 2785.45
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 5,
+      "split": "test",
+      "subtype": "paraphrased_indirect",
+      "question": "Did the Supreme Court characterize pensions as a discretionary bounty or employer grace in the Nakara ruling?",
+      "is_answerable": true,
+      "expected_answer": "No, the Court held that pension is neither a bounty nor a matter of grace or ex-gratia payment, but a payment for past services rendered.",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 9,
+      "actual_answer": "No, the Supreme Court held in the Nakara ruling that pension is neither a bounty nor a matter of grace depending upon the sweet will of the employer [1], [2].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "judgment of D.S. Nakara and others vs. \nUnion of India (AIR 1983, SC 130) clarified all the issues relating to pension. While \nexamining the goals that a pension scheme should seek to achieve the Apex"
+        },
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "Court also held that pension is neither a bounty nor a matter of grace \ndepending upon the sweet will of the employer. It is not an ex-gratia payment, but a \npayment for past services rendered. It is "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8326,
+      "latency_ms": 2105.39,
+      "latency_breakdown": {
+        "retrieval_ms": 903.17,
+        "generation_ms": 1202.18,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1673.93,
+        "pipeline_total_ms": 2105.39,
+        "eval_total_ms": 3779.32
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 6,
+      "split": "test",
+      "subtype": "false_premise",
+      "question": "Under the Golden Handshake Scheme, why are surplus employees given 3 months of emoluments per year of service instead of 1.5 months?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7827,
+      "latency_ms": 1537.99,
+      "latency_breakdown": {
+        "retrieval_ms": 616.35,
+        "generation_ms": 921.61,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 1537.99,
+        "eval_total_ms": 1537.99
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 7,
+      "split": "test",
+      "subtype": "false_premise",
+      "question": "How many months of paid paternity leave can male industrial employees encash during leave travel concession?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7444,
+      "latency_ms": 3743.14,
+      "latency_breakdown": {
+        "retrieval_ms": 923.54,
+        "generation_ms": 2819.58,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 3743.14,
+        "eval_total_ms": 3743.14
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 8,
+      "split": "test",
+      "subtype": "false_premise",
+      "question": "Which High Court judgment overturned D.S. Nakara v. Union of India to declare pensions a bounty?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8324,
+      "latency_ms": 1899.39,
+      "latency_breakdown": {
+        "retrieval_ms": 550.41,
+        "generation_ms": 1348.96,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 1899.39,
+        "eval_total_ms": 1899.39
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 9,
+      "split": "test",
+      "subtype": "near_miss_unanswerable",
+      "question": "What annual interest rate is credited on Central Government Provident Fund balances?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.6912,
+      "latency_ms": 1671.06,
+      "latency_breakdown": {
+        "retrieval_ms": 596.58,
+        "generation_ms": 1074.46,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 1671.06,
+        "eval_total_ms": 1671.06
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 10,
+      "split": "test",
+      "subtype": "near_miss_unanswerable",
+      "question": "How many days of casual leave do central government employees receive annually?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7525,
+      "latency_ms": 2334.92,
+      "latency_breakdown": {
+        "retrieval_ms": 912.5,
+        "generation_ms": 1422.39,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2334.92,
+        "eval_total_ms": 2334.92
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    }
+  ]
+}

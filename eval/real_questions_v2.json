@@ -1,0 +1,103 @@
+[
+  {
+    "id": 1,
+    "question": "At what age are university faculty members required to retire compared to staff in central government ministries?",
+    "expected_answer": "62 years for university faculty (teachers), compared to 60 years for central government employees",
+    "source_filename": "demo_pdf_employee_benefits.pdf",
+    "source_page": 8,
+    "split": "test",
+    "is_answerable": true,
+    "subtype": "paraphrased_indirect"
+  },
+  {
+    "id": 2,
+    "question": "Can an employee who served for seven years qualify for a central government retirement pension?",
+    "expected_answer": "No, a minimum of ten years of qualifying service is required to receive a government pension.",
+    "source_filename": "demo_pdf_employee_benefits.pdf",
+    "source_page": 11,
+    "split": "test",
+    "is_answerable": true,
+    "subtype": "paraphrased_indirect"
+  },
+  {
+    "id": 3,
+    "question": "What is the statutory ceiling on gratuity payments under the 1972 Gratuity Act?",
+    "expected_answer": "Rs two lakh (calculated at fifteen days' wages per completed year of service)",
+    "source_filename": "demo_pdf_employee_benefits.pdf",
+    "source_page": 12,
+    "split": "test",
+    "is_answerable": true,
+    "subtype": "paraphrased_indirect"
+  },
+  {
+    "id": 4,
+    "question": "How much monthly compensation do pensioners living outside Central Government Health Scheme areas receive for medical expenses?",
+    "expected_answer": "Rs 100 per month",
+    "source_filename": "demo_pdf_employee_benefits.pdf",
+    "source_page": 12,
+    "split": "test",
+    "is_answerable": true,
+    "subtype": "paraphrased_indirect"
+  },
+  {
+    "id": 5,
+    "question": "Did the Supreme Court characterize pensions as a discretionary bounty or employer grace in the Nakara ruling?",
+    "expected_answer": "No, the Court held that pension is neither a bounty nor a matter of grace or ex-gratia payment, but a payment for past services rendered.",
+    "source_filename": "demo_pdf_employee_benefits.pdf",
+    "source_page": 9,
+    "split": "test",
+    "is_answerable": true,
+    "subtype": "paraphrased_indirect"
+  },
+  {
+    "id": 6,
+    "question": "Under the Golden Handshake Scheme, why are surplus employees given 3 months of emoluments per year of service instead of 1.5 months?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false,
+    "subtype": "false_premise"
+  },
+  {
+    "id": 7,
+    "question": "How many months of paid paternity leave can male industrial employees encash during leave travel concession?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false,
+    "subtype": "false_premise"
+  },
+  {
+    "id": 8,
+    "question": "Which High Court judgment overturned D.S. Nakara v. Union of India to declare pensions a bounty?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false,
+    "subtype": "false_premise"
+  },
+  {
+    "id": 9,
+    "question": "What annual interest rate is credited on Central Government Provident Fund balances?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false,
+    "subtype": "near_miss_unanswerable"
+  },
+  {
+    "id": 10,
+    "question": "How many days of casual leave do central government employees receive annually?",
+    "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+    "source_filename": null,
+    "source_page": null,
+    "split": "test",
+    "is_answerable": false,
+    "subtype": "near_miss_unanswerable"
+  }
+]
+

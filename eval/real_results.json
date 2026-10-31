@@ -1,0 +1,639 @@
+{
+  "timestamp": "2026-10-30T17:21:53.211620+00:00",
+  "track": "real",
+  "track_name": "Real-World Benchmark (Public PDF Track v1)",
+  "collection": "real_docs",
+  "combined": {
+    "total_questions": 15,
+    "answerable_count": 12,
+    "unanswerable_count": 3,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 75.8,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 75.8,
+      "upper": 100.0
+    },
+    "fallback_recall": 100.0,
+    "fallback_recall_ci": {
+      "lower": 43.9,
+      "upper": 100.0
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 100.0,
+    "avg_latency_ms": 3211.9,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 833.1,
+      "generation_ms": 2378.7,
+      "retry_delay_ms": 0.0,
+      "judge_ms": 1344.0
+    }
+  },
+  "dev_split": null,
+  "test_split": {
+    "total_questions": 15,
+    "answerable_count": 12,
+    "unanswerable_count": 3,
+    "answer_accuracy": 100.0,
+    "answer_accuracy_ci": {
+      "lower": 75.8,
+      "upper": 100.0
+    },
+    "citation_accuracy": 100.0,
+    "citation_accuracy_ci": {
+      "lower": 75.8,
+      "upper": 100.0
+    },
+    "fallback_recall": 100.0,
+    "fallback_recall_ci": {
+      "lower": 43.9,
+      "upper": 100.0
+    },
+    "fallback_precision": 100.0,
+    "false_abstentions": 0,
+    "overall_score": 100.0,
+    "avg_latency_ms": 3211.9,
+    "latency_breakdown_avg": {
+      "retrieval_ms": 833.1,
+      "generation_ms": 2378.7,
+      "retry_delay_ms": 0.0,
+      "judge_ms": 1344.0
+    }
+  },
+  "config": {
+    "retrieval_threshold": 0.55,
+    "top_k": 5,
+    "llm_model": "gemini-flash-lite-latest",
+    "embedding_model": "gemini-embedding-001"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What retirement age did the Fifth Central Pay Commission fix for central government employees and for university teachers?",
+      "is_answerable": true,
+      "expected_answer": "60 years for central government employees, 62 for university teachers",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 8,
+      "actual_answer": "The Fifth Central Pay Commission fixed the retirement age at 60 years for central government employees and 62 years for university teachers [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 8,
+          "snippet": "f leave in addition to encashment on superannuation is likely to \nreduce absenteeism and improve overall productivity. \n9.3.2  Retirement Benefits  \nMost of the employees join government service at a "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7477,
+      "latency_ms": 2465.57,
+      "latency_breakdown": {
+        "retrieval_ms": 641.61,
+        "generation_ms": 1823.93,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 2014.68,
+        "pipeline_total_ms": 2465.57,
+        "eval_total_ms": 4480.25
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 2,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many years of qualifying service are needed to receive a government pension?",
+      "is_answerable": true,
+      "expected_answer": "A minimum of ten years",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 11,
+      "actual_answer": "A minimum of ten years of qualifying service is required to be eligible for a government pension [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 11,
+          "snippet": "Reduction of pension for unsatisfactory service: Rule 6 provides for such reduction by \nthe appointing authority after giving opportunity to the employee to make his \nrepresentation against the propos"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.787,
+      "latency_ms": 2084.98,
+      "latency_breakdown": {
+        "retrieval_ms": 613.11,
+        "generation_ms": 1471.84,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 3109.41,
+        "pipeline_total_ms": 2084.98,
+        "eval_total_ms": 5194.39
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 3,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What portion of their pension can central government employees commute?",
+      "is_answerable": true,
+      "expected_answer": "Up to one-third",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 9,
+      "actual_answer": "Central government employees on retirement have the facility to commute up to 1/3rd of their pension [1], [2].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "The pension scheme involves cash disbursement to the retired employees in fixed \nmonthly amounts. It provides them a safe source of living as long as they survive. There \nis provision for extraordinar"
+        },
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "ng \npension, retirement gratuity, encashment of earned leave and the facility to commute up \nto 1/3rd of their pension. The significant features of retiring or superannuation pension are \nthat it is n"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7846,
+      "latency_ms": 4811.96,
+      "latency_breakdown": {
+        "retrieval_ms": 911.91,
+        "generation_ms": 3900.02,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 4154.24,
+        "pipeline_total_ms": 4811.96,
+        "eval_total_ms": 8966.2
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 4,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Under the Payment of Gratuity Act, 1972, what is the gratuity rate and the maximum amount?",
+      "is_answerable": true,
+      "expected_answer": "Fifteen days\u2019 wages per completed year of service, up to a maximum of Rs two lakh",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 12,
+      "actual_answer": "The Payment of Gratuity Act, 1972 provides for the payment of gratuity at the rate of fifteen days wages for each completed year of service, subject to a maximum of rupees two lakh [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "For the purposes calculating the period of employment, periods of maternity leave are \nincluded provided that the total period of such maternity leave does not exceed twelve \nweeks. The Payment of Gra"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8081,
+      "latency_ms": 2460.81,
+      "latency_breakdown": {
+        "retrieval_ms": 733.41,
+        "generation_ms": 1727.36,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 759.65,
+        "pipeline_total_ms": 2460.81,
+        "eval_total_ms": 3220.46
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 5,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many years of continuous service does the Payment of Gratuity Act require, and how many employees must the establishment have?",
+      "is_answerable": true,
+      "expected_answer": "Five years of continuous service; ten or more employees",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 11,
+      "actual_answer": "The Payment of Gratuity Act, 1972 requires five years of continuous service [2]. Additionally, the establishment must have ten or more employees (or workmen) [1], [2].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "For the purposes calculating the period of employment, periods of maternity leave are \nincluded provided that the total period of such maternity leave does not exceed twelve \nweeks. The Payment of Gra"
+        },
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 11,
+          "snippet": "mployee gets the money at the \ntime of retirement and has also the facility to draw loans out of it from time to time. \n9.4.4 Gratuity \nAccording to the definition in rule 3(1) of the 1972 central civ"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7844,
+      "latency_ms": 4975.1,
+      "latency_breakdown": {
+        "retrieval_ms": 922.91,
+        "generation_ms": 4052.16,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 970.51,
+        "pipeline_total_ms": 4975.1,
+        "eval_total_ms": 5945.61
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 6,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the maximum maternity leave that counts toward the period of employment for gratuity?",
+      "is_answerable": true,
+      "expected_answer": "Twelve weeks",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 12,
+      "actual_answer": "Periods of maternity leave are included in calculating the period of employment provided that the total period of such maternity leave does not exceed twelve weeks [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "For the purposes calculating the period of employment, periods of maternity leave are \nincluded provided that the total period of such maternity leave does not exceed twelve \nweeks. The Payment of Gra"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8321,
+      "latency_ms": 4392.0,
+      "latency_breakdown": {
+        "retrieval_ms": 913.22,
+        "generation_ms": 3478.75,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 3031.08,
+        "pipeline_total_ms": 4392.0,
+        "eval_total_ms": 7423.08
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 7,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What medical allowance did the Fifth Pay Commission suggest for pensioners not covered by CGHS?",
+      "is_answerable": true,
+      "expected_answer": "Rs 100 per month",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 12,
+      "actual_answer": "For pensioners not covered by the Central Government Health Scheme (CGHS), the Fifth Pay Commission suggested a medical allowance of Rs. 100 per month [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "oval of the cash ceiling and 2) computation of gratuity on pay \nplus the Dearness Allowance on the date of retirement. \nThe Fifth Pay Commission found considerable ad hocism in the treatment of employ"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8427,
+      "latency_ms": 2336.58,
+      "latency_breakdown": {
+        "retrieval_ms": 974.43,
+        "generation_ms": 1362.13,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 802.95,
+        "pipeline_total_ms": 2336.58,
+        "eval_total_ms": 3139.53
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 8,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What quantum of family pension did the Fifth Pay Commission retain?",
+      "is_answerable": true,
+      "expected_answer": "30% of reckonable emoluments, uniform for all categories, with the ceiling removed",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 11,
+      "actual_answer": "The Fifth Pay Commission retained the quantum of family pension at 30% of reckonable emoluments, making it uniform for all categories of employees [1].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 11,
+          "snippet": "the reduction of \nthe period over which emoluments are averaged towards the end of the career from ten to \nsix months. Pensioners who have served the government for more than thirty -three years \nwoul"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8535,
+      "latency_ms": 2114.62,
+      "latency_breakdown": {
+        "retrieval_ms": 583.06,
+        "generation_ms": 1531.54,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 776.56,
+        "pipeline_total_ms": 2114.62,
+        "eval_total_ms": 2891.18
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 9,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What was the revised earned-leave entitlement for industrial employees with eleven to twenty years of service?",
+      "is_answerable": true,
+      "expected_answer": "25 days, up from 22",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 7,
+      "actual_answer": "The revised earned-leave entitlement for industrial employees with eleven to twenty years of service is 25 days [4].",
+      "citations": [
+        {
+          "n": 4,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 7,
+          "snippet": "ystems \n\u2022 Changes may be so designed as to reduce absenteeism and improve productivity \nThe following was recommended. \n(a)  \nEntitlement to Earned Leave \nIndicated revisions have been recommended to "
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.783,
+      "latency_ms": 3030.18,
+      "latency_breakdown": {
+        "retrieval_ms": 656.61,
+        "generation_ms": 2373.54,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1198.78,
+        "pipeline_total_ms": 3030.18,
+        "eval_total_ms": 4228.96
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 10,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many days of earned leave can industrial employees accumulate, and how much can be encashed during service?",
+      "is_answerable": true,
+      "expected_answer": "Up to 300 days; encash up to 60 days while availing leave travel concession",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 8,
+      "actual_answer": "Industrial employees may be permitted to accumulate up to 300 days of earned leave, and can encash up to 60 days of the leave accumulated during their entire service while availing of leave travel concession for travel anywhere in the country [2].",
+      "citations": [
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 8,
+          "snippet": "counted as leave availed of by the employee and debited to the leave account. These two \nmeasures would cancel each other out and not have any net impact on the whole leave \nentitlement. \n(b) \nAccumul"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.8089,
+      "latency_ms": 3602.14,
+      "latency_breakdown": {
+        "retrieval_ms": 771.94,
+        "generation_ms": 2830.17,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 816.84,
+        "pipeline_total_ms": 3602.14,
+        "eval_total_ms": 4418.98
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 11,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What ex-gratia amount does the Golden Handshake Scheme give employees identified as surplus?",
+      "is_answerable": true,
+      "expected_answer": "1.5 months of emoluments (Pay + DA) per completed year of service or remaining service before retirement, whichever is lower",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 13,
+      "actual_answer": "Under the special short-term Golden Handshake Scheme, employees identified as surplus are entitled to an ex-gratia amount of 1.5 months emoluments (Pay + DA) for each completed year of service or the remaining years of service left before the normal date of retirement, whichever is lower [1], [2].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 12,
+          "snippet": "ion is that \nthey have weighed the pros and cons of their decision and have already lined up a job in \nall probability. For them, the normal provisions would be adequate. \n(b) Evolve a new special sho"
+        },
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 13,
+          "snippet": "1. Full commutation of pension by surrender of the right to receive monthly pension with \nan option to avail, instead of commutation up to the limit prescribed for employees \nretiring on superannuatio"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7795,
+      "latency_ms": 6645.36,
+      "latency_breakdown": {
+        "retrieval_ms": 1596.98,
+        "generation_ms": 5048.35,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 1582.38,
+        "pipeline_total_ms": 6645.36,
+        "eval_total_ms": 8227.74
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 12,
+      "split": "test",
+      "subtype": "standard",
+      "question": "Which Supreme Court case on pensions is cited, and what did the Court hold about the nature of pension?",
+      "is_answerable": true,
+      "expected_answer": "D.S. Nakara v. Union of India; pension is not a bounty or ex-gratia payment but a payment for past services",
+      "expected_file": "demo_pdf_employee_benefits.pdf",
+      "expected_page": 9,
+      "actual_answer": "The landmark Supreme Court case cited is D.S. Nakara and others vs. Union of India [2], [3]. The Court held that pension is neither a bounty nor a matter of grace depending upon the sweet will of the employer, but rather a payment for past services rendered and a statutory, inalienable, legally enforceable right earned by the employee [1], [3].",
+      "citations": [
+        {
+          "n": 1,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "Court also held that pension is neither a bounty nor a matter of grace \ndepending upon the sweet will of the employer. It is not an ex-gratia payment, but a \npayment for past services rendered. It is "
+        },
+        {
+          "n": 2,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "been modified from time to time with a view to bringing about improvements in the \npension benefits of the employees). \nAs per article 366(17) of the constitution of India, pension means a pension, wh"
+        },
+        {
+          "n": 3,
+          "filename": "demo_pdf_employee_benefits.pdf",
+          "page": 9,
+          "snippet": "judgment of D.S. Nakara and others vs. \nUnion of India (AIR 1983, SC 130) clarified all the issues relating to pension. While \nexamining the goals that a pension scheme should seek to achieve the Apex"
+        }
+      ],
+      "abstained": false,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7911,
+      "latency_ms": 2693.12,
+      "latency_breakdown": {
+        "retrieval_ms": 703.39,
+        "generation_ms": 1989.69,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 942.93,
+        "pipeline_total_ms": 2693.12,
+        "eval_total_ms": 3636.05
+      },
+      "fallback_layer": null,
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "gemini-flash-lite-latest",
+      "diagnosis": "Passed"
+    },
+    {
+      "id": 13,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the employer contribution percentage under the New Pension Scheme?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7321,
+      "latency_ms": 2220.42,
+      "latency_breakdown": {
+        "retrieval_ms": 1014.03,
+        "generation_ms": 1206.35,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2220.42,
+        "eval_total_ms": 2220.42
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 14,
+      "split": "test",
+      "subtype": "standard",
+      "question": "What is the minimum monthly pension amount for a central government employee?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7988,
+      "latency_ms": 2055.8,
+      "latency_breakdown": {
+        "retrieval_ms": 735.55,
+        "generation_ms": 1320.23,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2055.8,
+        "eval_total_ms": 2055.8
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    },
+    {
+      "id": 15,
+      "split": "test",
+      "subtype": "standard",
+      "question": "How many days of paternity leave do central government employees get?",
+      "is_answerable": false,
+      "expected_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "expected_file": null,
+      "expected_page": null,
+      "actual_answer": "I couldn't find this in the uploaded documents. Try rephrasing, or contact HR directly.",
+      "citations": [],
+      "abstained": true,
+      "answer_correct": 1,
+      "citation_correct": 1,
+      "gating_score": 0.7247,
+      "latency_ms": 2289.18,
+      "latency_breakdown": {
+        "retrieval_ms": 724.7,
+        "generation_ms": 1564.45,
+        "retry_count": 0,
+        "retry_delay_ms": 0.0,
+        "judge_ms": 0.0,
+        "pipeline_total_ms": 2289.18,
+        "eval_total_ms": 2289.18
+      },
+      "fallback_layer": "layer_2_llm",
+      "model_used": "gemini-flash-lite-latest",
+      "judge_model_used": "abstention_verified",
+      "diagnosis": "Passed: Correctly abstained."
+    }
+  ]
+}
