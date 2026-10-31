@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.bm25_store import get_bm25_store
+from backend.app.config import settings
 from backend.app.db import init_db
 from backend.app.routers import admin, chat
 
@@ -37,9 +38,22 @@ app = FastAPI(
 )
 
 # Enable CORS for Next.js frontend
+allowed_origins = list(
+    dict.fromkeys(
+        [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            *(
+                origin.strip().rstrip("/")
+                for origin in settings.CORS_ALLOWED_ORIGINS.split(",")
+                if origin.strip()
+            ),
+        ]
+    )
+)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

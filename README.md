@@ -315,6 +315,15 @@ Open your browser to:
 docker-compose up --build
 ```
 
+The local frontend uses `frontend/.env.local` with
+`NEXT_PUBLIC_API_URL=http://localhost:8000`. For Vercel, configure
+`NEXT_PUBLIC_API_URL` in the project environment variables to point to the deployed
+backend. In the Render backend environment, set `CORS_ALLOWED_ORIGINS` to the
+exact production Vercel origin (scheme and hostname only, for example
+`https://your-project.vercel.app`). Add any preview origins explicitly as
+comma-separated origins. Save the Render environment change and redeploy the
+service for it to take effect.
+
 ---
 
 ## 🧪 Running Automated Tests and Evaluation
@@ -360,6 +369,7 @@ python eval/run_eval.py --track all
 | `TOP_K_RETRIEVAL` | `5` | Number of context chunks delivered to LLM |
 | `RRF_K` | `60` | Reciprocal Rank Fusion smoothing constant (ordering only, not gating) |
 | `ADMIN_PASSWORD` | *(Configured via `.env`)* | Password protection for `/admin` management routes |
+| `CORS_ALLOWED_ORIGINS` | *(empty)* | Comma-separated exact browser origins to allow in addition to localhost |
 
 ---
 

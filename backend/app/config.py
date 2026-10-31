@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     # Admin Portal
     ADMIN_PASSWORD: str = "change_me_in_env"
 
+    # Comma-separated browser origins permitted by the CORS middleware
+    CORS_ALLOWED_ORIGINS: str = ""
+
     # Storage Paths
     SQLITE_DB_PATH: str = "data/policypilot.db"
     CHROMA_PERSIST_DIR: str = "data/chroma"

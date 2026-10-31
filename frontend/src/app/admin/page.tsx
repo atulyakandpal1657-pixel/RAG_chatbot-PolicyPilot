@@ -20,6 +20,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { apiFetch } from "@/utils/api";
 
 interface DocumentRecord {
   id: string;
@@ -101,7 +102,7 @@ export default function AdminPage() {
   const fetchAdminData = async (pwdToUse: string) => {
     setLoadingDocs(true);
     try {
-      const resDocs = await fetch("http://localhost:8000/api/admin/documents", {
+      const resDocs = await apiFetch("/api/admin/documents", {
         headers: { "X-Admin-Password": pwdToUse },
       });
 
@@ -116,18 +117,24 @@ export default function AdminPage() {
         setDocuments(docList);
         setIsAuthenticated(true);
         setUploadStatus(null);
+      } else {
+        throw new Error(`Could not load documents (HTTP ${resDocs.status}).`);
       }
 
       // Fetch Eval Results
-      const resEval = await fetch("http://localhost:8000/api/admin/eval-results", {
+      const resEval = await apiFetch("/api/admin/eval-results", {
         headers: { "X-Admin-Password": pwdToUse },
       });
       if (resEval.ok) {
         const evalData = await resEval.json();
         setEvalResults(evalData);
+      } else {
+        throw new Error(`Could not load evaluation results (HTTP ${resEval.status}).`);
       }
-    } catch (err: any) {
-      setUploadStatus("Unable to connect to backend at http://localhost:8000.");
+    } catch (err: unknown) {
+      setUploadStatus(
+        err instanceof Error ? err.message : "Unable to connect to the PolicyPilot backend.",
+      );
     } finally {
       setLoadingDocs(false);
     }
@@ -155,20 +162,22 @@ export default function AdminPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/api/admin/upload", {
+      const res = await apiFetch("/api/admin/upload", {
         method: "POST",
         headers: { "X-Admin-Password": password },
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed.");
+      if (!res.ok) throw new Error(`Upload failed (HTTP ${res.status}).`);
 
       const data = await res.json();
       setUploadStatus(`Successfully processed ${data.uploaded.length} file(s).`);
       setSelectedFiles(null);
       fetchAdminData(password);
-    } catch (err: any) {
-      setUploadStatus(`Upload error: ${err.message}`);
+    } catch (err: unknown) {
+      setUploadStatus(
+        `Upload error: ${err instanceof Error ? err.message : "Unable to connect to the backend."}`,
+      );
     } finally {
       setUploading(false);
     }
@@ -180,7 +189,7 @@ export default function AdminPage() {
     }
 
     try {
-      const res = await fetch(`http://localhost:8000/api/admin/documents/${encodeURIComponent(docIdOrName)}`, {
+      const res = await apiFetch(`/api/admin/documents/${encodeURIComponent(docIdOrName)}`, {
         method: "DELETE",
         headers: { "X-Admin-Password": password },
       });
@@ -191,23 +200,25 @@ export default function AdminPage() {
         alert("Failed to delete document.");
       }
     } catch (err) {
-      alert("Error contacting backend.");
+      alert(err instanceof Error ? err.message : "Error contacting backend.");
     }
   };
 
   const handleReindex = async () => {
     setLoadingDocs(true);
     try {
-      const res = await fetch("http://localhost:8000/api/admin/reindex", {
+      const res = await apiFetch("/api/admin/reindex", {
         method: "POST",
         headers: { "X-Admin-Password": password },
       });
       if (res.ok) {
         alert("Corpus and BM25 index rebuilt successfully.");
         fetchAdminData(password);
+      } else {
+        throw new Error(`Re-indexing failed (HTTP ${res.status}).`);
       }
     } catch (err) {
-      alert("Error re-indexing.");
+      alert(err instanceof Error ? err.message : "Error re-indexing.");
     } finally {
       setLoadingDocs(false);
     }
@@ -216,7 +227,7 @@ export default function AdminPage() {
   const handleRunEvaluation = async (track: "synthetic" | "real" | "real_v2") => {
     setEvalRunning(track);
     try {
-      const res = await fetch(`http://localhost:8000/api/admin/run-eval?track=${track}`, {
+      const res = await apiFetch(`/api/admin/run-eval?track=${encodeURIComponent(track)}`, {
         method: "POST",
         headers: { "X-Admin-Password": password },
       });
@@ -225,10 +236,10 @@ export default function AdminPage() {
         await fetchAdminData(password);
         setSelectedTrack(track);
       } else {
-        alert(`Evaluation run (${track}) encountered an error.`);
+        throw new Error(`Evaluation run (${track}) failed (HTTP ${res.status}).`);
       }
     } catch (err) {
-      alert("Failed to start evaluation.");
+      alert(err instanceof Error ? err.message : "Failed to start evaluation.");
     } finally {
       setEvalRunning(null);
     }

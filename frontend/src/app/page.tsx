@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import CitationPanel, { CitationData } from "@/components/CitationPanel";
+import { apiFetch, isChatResponse } from "@/utils/api";
 
 interface Message {
   id: string;
@@ -88,7 +89,7 @@ export default function ChatPage() {
     }));
 
     try {
-      const res = await fetch("http://localhost:8000/api/chat", {
+      const res = await apiFetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,25 +102,31 @@ export default function ChatPage() {
         throw new Error(`Server returned ${res.status}`);
       }
 
-      const data = await res.json();
+      const data: unknown = await res.json();
+      if (!isChatResponse(data)) {
+        throw new Error("The backend returned an unexpected chat response.");
+      }
 
       const assistantMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
         content: data.answer,
-        citations: data.citations || [],
+        citations: data.citations,
         answerable: data.answerable,
         confidence: data.confidence,
-        gatingScore: data.gating_score,
+        gatingScore: data.gating_score ?? undefined,
       };
 
       setMessages([...newHistory, assistantMsg]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content:
-          "Unable to connect to the PolicyPilot backend. Please ensure the backend server is running at http://localhost:8000.",
+        content: err instanceof Error && err.message.startsWith("NEXT_PUBLIC_API_URL")
+          ? err.message
+          : `Unable to connect to the PolicyPilot backend. ${
+              err instanceof Error ? err.message : "Please try again."
+            }`,
         answerable: false,
       };
       setMessages([...newHistory, errorMsg]);
