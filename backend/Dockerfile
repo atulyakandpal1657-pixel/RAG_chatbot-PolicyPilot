@@ -17,7 +17,6 @@ COPY backend ./backend
 COPY sample_docs ./sample_docs
 COPY eval ./eval
 COPY scripts ./scripts
-COPY .env.example ./.env
 
 EXPOSE 8000
 
