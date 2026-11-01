@@ -3,19 +3,22 @@
 import { useState, useRef, useEffect } from "react";
 import {
   Send,
-  Sparkles,
   AlertTriangle,
   RotateCcw,
   BookOpen,
-  ArrowRight,
   ShieldCheck,
   HelpCircle,
-  FileCheck2,
   ExternalLink,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import CitationPanel, { CitationData } from "@/components/CitationPanel";
 import { apiFetch, isChatResponse } from "@/utils/api";
+
+let messageSeq = 0;
+function createMessageId(): string {
+  messageSeq += 1;
+  return `msg_${messageSeq}`;
+}
 
 interface Message {
   id: string;
@@ -27,6 +30,13 @@ interface Message {
   gatingScore?: number;
 }
 
+interface SystemStatus {
+  app_env: string;
+  demo_mode: boolean;
+  company_name: string;
+  document_count: number;
+}
+
 const STARTER_QUESTIONS = [
   {
     title: "Paid Vacation & Accrual",
@@ -34,7 +44,7 @@ const STARTER_QUESTIONS = [
   },
   {
     title: "401(k) Retirement Match",
-    query: "What percentage does Northwind Labs match on employee 401(k) contributions?",
+    query: "What percentage is matched on employee 401(k) contributions?",
   },
   {
     title: "Remote Work & Core Hours",
@@ -46,7 +56,7 @@ const STARTER_QUESTIONS = [
   },
   {
     title: "Out-of-Scope Fallback Test",
-    query: "What is Northwind Labs' stock ticker symbol on NASDAQ?",
+    query: "What is the corporate stock ticker symbol on NASDAQ?",
   },
 ];
 
@@ -57,7 +67,18 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeCitation, setActiveCitation] = useState<CitationData | null>(null);
+  const [status, setStatus] = useState<SystemStatus | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Fetch live system status (document count and mode)
+    apiFetch("/api/admin/status")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: SystemStatus | null) => {
+        if (data) setStatus(data);
+      })
+      .catch(() => {});
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -72,7 +93,7 @@ export default function ChatPage() {
     if (!query || loading) return;
 
     const userMsg: Message = {
-      id: Date.now().toString(),
+      id: createMessageId(),
       role: "user",
       content: query,
     };
@@ -108,7 +129,7 @@ export default function ChatPage() {
       }
 
       const assistantMsg: Message = {
-        id: (Date.now() + 1).toString(),
+        id: createMessageId(),
         role: "assistant",
         content: data.answer,
         citations: data.citations,
@@ -120,7 +141,7 @@ export default function ChatPage() {
       setMessages([...newHistory, assistantMsg]);
     } catch (err: unknown) {
       const errorMsg: Message = {
-        id: (Date.now() + 1).toString(),
+        id: createMessageId(),
         role: "assistant",
         content: err instanceof Error && err.message.startsWith("NEXT_PUBLIC_API_URL")
           ? err.message
@@ -172,7 +193,10 @@ export default function ChatPage() {
         <div className="flex items-center justify-between pb-4 border-b border-slate-900 mb-4">
           <div className="flex items-center gap-2 text-xs text-slate-400">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Northwind Labs HR Corpus Active (3 Ingested Documents)</span>
+            <span>
+              {status?.company_name || "HR Policy"} Corpus Active ({status?.document_count ?? 3} Ingested Document{status?.document_count === 1 ? "" : "s"})
+              {status?.demo_mode ? " • Demo Mode" : ""}
+            </span>
           </div>
           {messages.length > 0 && (
             <button
@@ -198,7 +222,7 @@ export default function ChatPage() {
                   Welcome to PolicyPilot
                 </h1>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Ask any question about Northwind Labs HR policies, benefits, leave, and IT security. Every answer is grounded with verifiable source document page citations.
+                  Ask any question about company HR policies, benefits, leave, and IT security. Every answer is grounded with source document page citations.
                 </p>
               </div>
 

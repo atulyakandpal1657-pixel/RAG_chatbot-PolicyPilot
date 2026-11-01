@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Database,
   UploadCloud,
@@ -74,7 +74,7 @@ interface TrackData {
   combined?: SplitMetrics;
   dev_split?: SplitMetrics | null;
   test_split?: SplitMetrics | null;
-  config?: any;
+  config?: Record<string, unknown>;
   message?: string;
   questions?: QuestionRecord[];
 }
@@ -140,9 +140,7 @@ export default function AdminPage() {
     }
   };
 
-  useEffect(() => {
-    fetchAdminData(password);
-  }, []);
+  // Admin data is fetched when the user submits their password via handleLogin
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +166,14 @@ export default function AdminPage() {
         body: formData,
       });
 
-      if (!res.ok) throw new Error(`Upload failed (HTTP ${res.status}).`);
+      if (!res.ok) {
+        let msg = `Upload failed (HTTP ${res.status}).`;
+        try {
+          const errData = await res.json();
+          if (errData.detail) msg = errData.detail;
+        } catch {}
+        throw new Error(msg);
+      }
 
       const data = await res.json();
       setUploadStatus(`Successfully processed ${data.uploaded.length} file(s).`);
@@ -197,7 +202,12 @@ export default function AdminPage() {
       if (res.ok) {
         fetchAdminData(password);
       } else {
-        alert("Failed to delete document.");
+        let msg = "Failed to delete document.";
+        try {
+          const errData = await res.json();
+          if (errData.detail) msg = errData.detail;
+        } catch {}
+        alert(msg);
       }
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error contacting backend.");
@@ -215,7 +225,12 @@ export default function AdminPage() {
         alert("Corpus and BM25 index rebuilt successfully.");
         fetchAdminData(password);
       } else {
-        throw new Error(`Re-indexing failed (HTTP ${res.status}).`);
+        let msg = `Re-indexing failed (HTTP ${res.status}).`;
+        try {
+          const errData = await res.json();
+          if (errData.detail) msg = errData.detail;
+        } catch {}
+        throw new Error(msg);
       }
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error re-indexing.");
@@ -236,7 +251,12 @@ export default function AdminPage() {
         await fetchAdminData(password);
         setSelectedTrack(track);
       } else {
-        throw new Error(`Evaluation run (${track}) failed (HTTP ${res.status}).`);
+        let msg = `Evaluation run (${track}) failed (HTTP ${res.status}).`;
+        try {
+          const errData = await res.json();
+          if (errData.detail) msg = errData.detail;
+        } catch {}
+        throw new Error(msg);
       }
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to start evaluation.");

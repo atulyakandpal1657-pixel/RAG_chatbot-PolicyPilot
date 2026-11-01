@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, X, CheckCircle, ExternalLink, Bookmark } from "lucide-react";
+import { FileText, X, CheckCircle, Bookmark } from "lucide-react";
 
 export interface CitationData {
   n: number;
@@ -76,7 +76,7 @@ export default function CitationPanel({ citation, onClose }: CitationPanelProps)
           </label>
           <div className="rounded-xl border border-indigo-900/30 bg-indigo-950/20 p-4 text-sm leading-relaxed text-slate-200 shadow-inner">
             <blockquote className="border-l-2 border-indigo-500 pl-3 italic text-slate-300">
-              "{citation.snippet}"
+              &ldquo;{citation.snippet}&rdquo;
             </blockquote>
           </div>
         </div>

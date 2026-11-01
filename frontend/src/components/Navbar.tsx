@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, MessageSquare, Database, Sparkles, BookOpen } from "lucide-react";
+import { Shield, MessageSquare, Database, Sparkles } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -22,10 +22,10 @@ export default function Navbar() {
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-0.5 text-[11px] font-medium text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
                 <Sparkles className="h-2.5 w-2.5" />
-                Northwind Labs
+                HR Policy
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">Verified Citation RAG Engine</p>
+            <p className="text-[11px] text-slate-400">Answers with Source Citations</p>
           </div>
         </Link>
 
