@@ -1,3 +1,4 @@
+import hmac
 import json
 import logging
 from pathlib import Path
@@ -16,7 +17,7 @@ from backend.app.db import (
     upsert_document,
     update_document_status,
 )
-from backend.app.embeddings import get_embedding_provider
+from backend.app.embeddings import get_embedding_provider, EmbeddingError
 from backend.app.parser import parse_document
 from backend.app.vector_store import get_vector_store
 
@@ -24,27 +25,73 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
+ALLOWED_EXTENSIONS = {".pdf", ".docx", ".doc", ".txt", ".md"}
+
 
 def verify_admin_password(
     x_admin_password: Optional[str] = Header(None, alias="X-Admin-Password"),
     authorization: Optional[str] = Header(None, alias="Authorization"),
 ) -> bool:
-    """Verifies that the caller provided the correct ADMIN_PASSWORD."""
-    expected = settings.ADMIN_PASSWORD.strip()
-    # Check X-Admin-Password header
-    if x_admin_password and x_admin_password.strip() == expected:
-        return True
+    """Verifies that the caller provided the correct ADMIN_PASSWORD using constant-time comparison."""
+    expected = settings.ADMIN_PASSWORD.strip() if settings.ADMIN_PASSWORD else ""
+    if not expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Admin credentials not configured.",
+        )
 
-    # Check Bearer token
-    if authorization and authorization.startswith("Bearer "):
-        token = authorization.split("Bearer ", 1)[1].strip()
-        if token == expected:
-            return True
+    provided = None
+    if x_admin_password:
+        provided = x_admin_password.strip()
+    elif authorization and authorization.startswith("Bearer "):
+        provided = authorization.split("Bearer ", 1)[1].strip()
+
+    if provided and hmac.compare_digest(provided, expected):
+        return True
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid or missing admin credentials.",
     )
+
+
+def verify_demo_mode_allowed() -> None:
+    """Blocks mutating or resource-intensive operations when DEMO_MODE is active."""
+    if settings.DEMO_MODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Operation disabled in demo mode. Read-only access only.",
+        )
+
+
+async def read_upload_file_safely(file: UploadFile, max_bytes: int) -> bytes:
+    """
+    Safely reads an uploaded file in chunks while enforcing maximum file size
+    and checking allowed file extension before reading into memory.
+    """
+    filename = file.filename or ""
+    suffix = Path(filename).suffix.lower()
+    if suffix not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported file format '{suffix}'. Allowed formats: {', '.join(sorted(ALLOWED_EXTENSIONS))}",
+        )
+
+    total_bytes = 0
+    chunks = []
+    chunk_size = 64 * 1024  # 64 KB
+    while True:
+        chunk = await file.read(chunk_size)
+        if not chunk:
+            break
+        total_bytes += len(chunk)
+        if total_bytes > max_bytes:
+            raise HTTPException(
+                status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+                detail=f"File '{filename}' exceeds maximum allowed size of {max_bytes // (1024 * 1024)} MB.",
+            )
+        chunks.append(chunk)
+    return b"".join(chunks)
 
 
 class DocumentResponse(BaseModel):
@@ -57,6 +104,25 @@ class DocumentResponse(BaseModel):
     status: str
 
 
+class AdminStatusResponse(BaseModel):
+    app_env: str
+    demo_mode: bool
+    company_name: str
+    document_count: int
+
+
+@router.get("/status", response_model=AdminStatusResponse)
+async def get_admin_status():
+    """Returns deployment status, demo mode flag, and current document count."""
+    docs = list_documents(collection="default")
+    return AdminStatusResponse(
+        app_env=settings.APP_ENV or "production",
+        demo_mode=bool(settings.DEMO_MODE),
+        company_name=settings.COMPANY_NAME,
+        document_count=len(docs),
+    )
+
+
 @router.get("/documents", response_model=List[DocumentResponse])
 async def get_documents(_: bool = Depends(verify_admin_password)):
     """Retrieve all ingested documents."""
@@ -66,11 +132,13 @@ async def get_documents(_: bool = Depends(verify_admin_password)):
 @router.post("/upload")
 async def upload_documents(
     files: List[UploadFile] = File(...),
-    _: bool = Depends(verify_admin_password)
+    _: bool = Depends(verify_admin_password),
+    __: None = Depends(verify_demo_mode_allowed),
 ):
     """
     Multi-file document ingestion.
     Re-uploading a file with the same name cleanly replaces the old version.
+    In DEMO_MODE, returns HTTP 403.
     """
     results = []
     vector_store = get_vector_store()
@@ -78,9 +146,10 @@ async def upload_documents(
     bm25_store = get_bm25_store()
 
     for file in files:
-        filename = Path(file.filename).name
+        filename = Path(file.filename or "unknown").name
+        doc_id = None
         try:
-            content = await file.read()
+            content = await read_upload_file_safely(file, settings.MAX_UPLOAD_SIZE_BYTES)
             file_size = len(content)
 
             # 1. Parse document into pages
@@ -126,8 +195,43 @@ async def upload_documents(
                 "chunk_count": len(chunks)
             })
 
+        except HTTPException as he:
+            logger.warning(f"Validation failure for upload {filename}: {he.detail}")
+            if doc_id:
+                try:
+                    vector_store.delete_by_doc_id(doc_id)
+                    vector_store.delete_by_filename(filename)
+                    delete_document(doc_id)
+                except Exception:
+                    pass
+            results.append({
+                "filename": filename,
+                "status": "failed",
+                "error": he.detail
+            })
+        except EmbeddingError as ee:
+            logger.error(f"Embedding failure during upload of {filename}: {ee}")
+            if doc_id:
+                try:
+                    vector_store.delete_by_doc_id(doc_id)
+                    vector_store.delete_by_filename(filename)
+                    delete_document(doc_id)
+                except Exception:
+                    pass
+            results.append({
+                "filename": filename,
+                "status": "failed",
+                "error": "Embedding generation failed. Document ingestion was rolled back."
+            })
         except Exception as e:
-            logger.error(f"Error processing file {filename}: {e}", exc_info=True)
+            logger.error(f"Error processing file {filename}: {type(e).__name__}", exc_info=True)
+            if doc_id:
+                try:
+                    vector_store.delete_by_doc_id(doc_id)
+                    vector_store.delete_by_filename(filename)
+                    delete_document(doc_id)
+                except Exception:
+                    pass
             results.append({
                 "filename": filename,
                 "status": "failed",
@@ -143,9 +247,10 @@ async def upload_documents(
 @router.delete("/documents/{doc_id_or_name}")
 async def delete_document_endpoint(
     doc_id_or_name: str,
-    _: bool = Depends(verify_admin_password)
+    _: bool = Depends(verify_admin_password),
+    __: None = Depends(verify_demo_mode_allowed),
 ):
-    """Deletes a document from SQLite, ChromaDB, and updates BM25."""
+    """Deletes a document from SQLite, ChromaDB, and updates BM25. In DEMO_MODE, returns 403."""
     vector_store = get_vector_store()
     bm25_store = get_bm25_store()
 
@@ -165,8 +270,11 @@ async def delete_document_endpoint(
 
 
 @router.post("/reindex")
-async def reindex_all(_: bool = Depends(verify_admin_password)):
-    """Re-indexes all existing documents and updates BM25."""
+async def reindex_all(
+    _: bool = Depends(verify_admin_password),
+    __: None = Depends(verify_demo_mode_allowed),
+):
+    """Re-indexes all existing documents and updates BM25. In DEMO_MODE, returns 403."""
     bm25_store = get_bm25_store()
     bm25_store.rebuild()
     return {"message": "Re-indexed successfully.", "total_chunks": len(get_all_chunks())}
@@ -178,7 +286,6 @@ async def get_eval_results(
     _: bool = Depends(verify_admin_password)
 ):
     """Returns the evaluation reports for synthetic and/or real-world tracks."""
-    # Resolve absolute path so it works regardless of uvicorn's working directory
     project_root = Path(__file__).resolve().parent.parent.parent.parent
     synthetic_path = project_root / "eval" / "results.json"
     real_path = project_root / "eval" / "real_results.json"
@@ -235,20 +342,18 @@ async def get_eval_results(
 @router.post("/run-eval")
 async def trigger_eval(
     track: str = "synthetic",
-    _: bool = Depends(verify_admin_password)
+    _: bool = Depends(verify_admin_password),
+    __: None = Depends(verify_demo_mode_allowed),
 ):
-    """Triggers an evaluation run programmatically for synthetic or real tracks."""
+    """Triggers an evaluation run programmatically. In DEMO_MODE, returns 403."""
     import subprocess
     import sys
-    from pathlib import Path
 
-    # Resolve absolute path — safe even when the project root contains spaces
     project_root = Path(__file__).resolve().parent.parent.parent.parent
     eval_script = project_root / "eval" / "run_eval.py"
     track_arg = track if track in ["real", "real_v2"] else "synthetic"
 
     try:
-        # Use a list so subprocess never needs shell=True (no quoting issues)
         result = subprocess.run(
             [sys.executable, str(eval_script), "--track", track_arg],
             capture_output=True,
@@ -270,5 +375,5 @@ async def trigger_eval(
             return data
         return {"has_results": True, "output": result.stdout}
     except Exception as e:
-        logger.error(f"Failed to run evaluation ({track_arg}): {e}")
-        raise HTTPException(status_code=500, detail=f"Evaluation failed: {str(e)}")
+        logger.error(f"Failed to run evaluation ({track_arg}): {type(e).__name__}")
+        raise HTTPException(status_code=500, detail="Evaluation execution failed.")

@@ -36,7 +36,19 @@ def seed_database():
     else:
         print(f"[2/5] Found {len(pdf_files)} existing sample documents in sample_docs/.")
 
-    # 3. Ingestion into ChromaDB & SQLite
+    # 3. Ingestion into ChromaDB & SQLite (idempotent: only if collection empty)
+    existing_docs = list_documents(collection="default")
+    force = "--force" in sys.argv
+    if existing_docs and len(existing_docs) >= 3 and not force:
+        print(f"[3/5] Collection 'default' already contains {len(existing_docs)} documents; skipping re-ingestion.")
+        print("[4/5] Rebuilding in-memory BM25 index from SQLite chunks...")
+        bm25_store = get_bm25_store()
+        bm25_store.rebuild()
+        print("\n" + "=" * 60)
+        print("Database already seeded. Startup ready.")
+        print("=" * 60)
+        return
+
     print("[3/5] Parsing documents and generating vector embeddings...")
     vector_store = get_vector_store()
     embeddings_provider = get_embedding_provider()

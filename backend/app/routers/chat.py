@@ -1,11 +1,12 @@
 import logging
 import re
 from typing import Any, Dict, List, Optional
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from backend.app.config import settings
-from backend.app.embeddings import get_embedding_provider
+from backend.app.embeddings import EmbeddingError, get_embedding_provider
 from backend.app.llm import FALLBACK_MESSAGE, get_llm_provider
+from backend.app.rate_limiter import rate_limit_chat
 from backend.app.retriever import get_retriever
 
 logger = logging.getLogger(__name__)
@@ -40,10 +41,15 @@ class ChatResponse(BaseModel):
 
 
 @router.post("", response_model=ChatResponse)
-async def chat_endpoint(payload: ChatRequest):
+async def chat_endpoint(payload: ChatRequest, _: None = Depends(rate_limit_chat)):
     question = payload.question.strip()
     if not question:
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
+    if len(question) > settings.MAX_QUESTION_LENGTH:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Question exceeds maximum length of {settings.MAX_QUESTION_LENGTH} characters."
+        )
 
     llm = get_llm_provider()
     embeddings = get_embedding_provider()
@@ -51,7 +57,7 @@ async def chat_endpoint(payload: ChatRequest):
 
     # Step 1: Follow-up question rewrite (only run when chat history exists)
     history_dicts = [{"role": m.role, "content": m.content} for m in payload.history]
-    if history_dicts and len(history_dicts) > 0:
+    if history_dicts:
         search_query = llm.rewrite_query(question, history_dicts)
         logger.info(f"Rewrote follow-up question: '{question}' -> '{search_query}'")
     else:
@@ -60,9 +66,18 @@ async def chat_endpoint(payload: ChatRequest):
     # Step 2: Embed query and retrieve hybrid chunks
     try:
         query_embedding = embeddings.embed_query(search_query)
+    except EmbeddingError as e:
+        logger.error(f"Embedding service failure during chat: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Embedding service temporarily unavailable. Please try again shortly."
+        )
     except Exception as e:
-        logger.error(f"Failed to generate query embedding: {e}")
-        query_embedding = [0.0] * 768
+        logger.error(f"Unexpected error generating query embedding: {type(e).__name__}")
+        raise HTTPException(
+            status_code=503,
+            detail="Embedding service temporarily unavailable. Please try again shortly."
+        )
 
     retrieval_res = retriever.retrieve(
         query=search_query,

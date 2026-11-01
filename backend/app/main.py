@@ -17,6 +17,7 @@ logger = logging.getLogger("policypilot")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup actions
+    logger.info(f"PolicyPilot starting: APP_ENV={settings.APP_ENV}, DEMO_MODE={settings.DEMO_MODE}")
     logger.info("Initializing SQLite database tables...")
     init_db()
 
@@ -32,7 +33,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="PolicyPilot API",
-    description="HR Policy RAG Chatbot with Citation Verification",
+    description="HR Policy RAG Chatbot with Source Citations",
     version="1.0.0",
     lifespan=lifespan
 )

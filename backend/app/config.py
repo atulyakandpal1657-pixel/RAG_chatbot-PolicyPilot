@@ -1,5 +1,17 @@
 from pathlib import Path
+from typing import Optional, Union
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+KNOWN_DEFAULT_PASSWORDS = {
+    "change_me_in_env",
+    "change_this_to_a_secure_password",
+    "admin",
+    "password",
+    "12345678",
+    "root",
+}
+MIN_ADMIN_PASSWORD_LENGTH = 12
 
 
 class Settings(BaseSettings):
@@ -9,16 +21,20 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
+    # Environment & Demo Mode
+    APP_ENV: Optional[str] = "production"
+    DEMO_MODE: Optional[Union[bool, str]] = None
+
     # Provider Selection
     LLM_PROVIDER: str = "gemini"
     EMBEDDINGS_PROVIDER: str = "gemini"
 
     # Gemini (model names sourced from https://ai.google.dev/gemini-api/docs/models)
     GEMINI_API_KEY: str = ""
-    GEMINI_LLM_MODEL: str = "gemini-3.6-flash"         # verified active non-2.5 Flash model
+    GEMINI_LLM_MODEL: str = "gemini-3.6-flash"
     GEMINI_FALLBACK_MODELS: str = "gemini-3.5-flash,gemini-3.6-flash,gemini-flash-lite-latest"
     GEMINI_JUDGE_MODEL: str = "gemini-3.6-flash"
-    GEMINI_EMBEDDING_MODEL: str = "gemini-embedding-001"  # verified active embedding model
+    GEMINI_EMBEDDING_MODEL: str = "gemini-embedding-001"
 
     # OpenAI
     OPENAI_API_KEY: str = ""
@@ -37,7 +53,17 @@ class Settings(BaseSettings):
     # Admin Portal
     ADMIN_PASSWORD: str = "change_me_in_env"
 
-    # Comma-separated browser origins permitted by the CORS middleware
+    # Limits and Protections
+    MAX_UPLOAD_SIZE_BYTES: int = 50 * 1024 * 1024  # 50 MB
+    MAX_QUESTION_LENGTH: int = 1500
+    RATE_LIMIT_PER_MINUTE: int = 30
+    DAILY_REQUEST_CAP: int = 500
+    TRUSTED_PROXIES: str = "127.0.0.1,::1"
+
+    # Branding
+    COMPANY_NAME: str = "Northwind Labs"
+
+    # Comma-separated browser origins permitted by CORS
     CORS_ALLOWED_ORIGINS: str = ""
 
     # Storage Paths
@@ -56,6 +82,48 @@ class Settings(BaseSettings):
         p = Path(self.CHROMA_PERSIST_DIR)
         p.mkdir(parents=True, exist_ok=True)
         return p
+
+    @model_validator(mode="after")
+    def validate_env_and_security(self) -> "Settings":
+        # 1. APP_ENV validation
+        env_raw = (self.APP_ENV or "production").strip().lower()
+        if env_raw not in ("production", "development"):
+            raise ValueError(f"Invalid APP_ENV: '{self.APP_ENV}'. Must be 'production' or 'development'.")
+        self.APP_ENV = env_raw
+
+        # 2. DEMO_MODE resolution
+        if self.DEMO_MODE is None:
+            self.DEMO_MODE = True if self.APP_ENV == "production" else False
+        elif isinstance(self.DEMO_MODE, str):
+            dm_str = self.DEMO_MODE.strip().lower()
+            if dm_str in ("true", "1", "yes"):
+                self.DEMO_MODE = True
+            elif dm_str in ("false", "0", "no"):
+                self.DEMO_MODE = False
+            else:
+                raise ValueError(f"Invalid DEMO_MODE: '{self.DEMO_MODE}'. Must be 'true' or 'false'.")
+        elif isinstance(self.DEMO_MODE, bool):
+            pass
+        else:
+            raise ValueError(f"Invalid DEMO_MODE type: {type(self.DEMO_MODE)}. Must be boolean or 'true'/'false'.")
+
+        # 3. Production Password & Strength checks
+        if self.APP_ENV == "production":
+            pwd = (self.ADMIN_PASSWORD or "").strip()
+            if not pwd:
+                raise ValueError("ADMIN_PASSWORD must be configured and cannot be empty in production.")
+
+            if not self.DEMO_MODE:
+                if pwd in KNOWN_DEFAULT_PASSWORDS:
+                    raise ValueError(
+                        "In production with DEMO_MODE=false, ADMIN_PASSWORD cannot be a known default placeholder."
+                    )
+                if len(pwd) < MIN_ADMIN_PASSWORD_LENGTH:
+                    raise ValueError(
+                        f"In production with DEMO_MODE=false, ADMIN_PASSWORD must be at least {MIN_ADMIN_PASSWORD_LENGTH} characters."
+                    )
+
+        return self
 
 
 settings = Settings()
