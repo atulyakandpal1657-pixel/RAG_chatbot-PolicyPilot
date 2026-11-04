@@ -14,7 +14,7 @@ jobs:
       APP_ENV: development
       DEMO_MODE: "false"
       ADMIN_PASSWORD: test_ci_admin_password_123
-      GEMINI_API_KEY: ""
+      GEMINI_API_KEY: dummy_ci_gemini_api_key
     steps:
       - name: Check out repository
         uses: actions/checkout@v4

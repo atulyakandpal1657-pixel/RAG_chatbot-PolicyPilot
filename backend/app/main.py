@@ -31,8 +31,9 @@ async def lifespan(app: FastAPI):
     n_proxies = len(trusted)
     if n_proxies > 0:
         logger.info(
-            f"Rate limiter: {n_proxies} trusted proxy/proxies configured. "
-            "X-Forwarded-For headers will be used for client IP identification."
+            f"Rate limiter: {n_proxies} trusted proxy rule(s) configured. "
+            "Forwarded headers (X-Forwarded-For) are honored ONLY when the connecting peer IP matches a configured trusted proxy; "
+            "untrusted peer headers are ignored."
         )
     else:
         logger.info(

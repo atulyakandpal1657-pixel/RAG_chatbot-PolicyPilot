@@ -116,3 +116,88 @@ def test_daily_request_cap_triggers_429():
     finally:
         settings.DAILY_REQUEST_CAP = original_cap
 
+
+def test_cidr_trusted_proxy_parsing_and_wildcard_rejection():
+    """parse_trusted_proxies parses exact IPs, CIDR blocks, and rejects wildcards."""
+    from backend.app.rate_limiter import parse_trusted_proxies
+
+    parsed = parse_trusted_proxies("127.0.0.1, 10.0.0.0/24, 2001:db8::/32, testclient")
+    assert len(parsed) == 4
+
+    with pytest.raises(ValueError, match="not permitted"):
+        parse_trusted_proxies("*")
+
+    with pytest.raises(ValueError, match="not permitted"):
+        parse_trusted_proxies("0.0.0.0/0")
+
+    with pytest.raises(ValueError, match="not permitted"):
+        parse_trusted_proxies("::/0")
+
+
+def test_cidr_trusted_proxy_honors_forwarded_header():
+    """When peer is trusted via CIDR range, X-Forwarded-For is honored."""
+    from backend.app.rate_limiter import limiter
+    from starlette.requests import Request
+
+    original_trusted = settings.TRUSTED_PROXIES
+    try:
+        # Trust local peer and an internal VPC CIDR
+        settings.TRUSTED_PROXIES = "testclient, 10.0.0.0/16"
+
+        # Simulating request from trusted peer 'testclient' with client IP 203.0.113.195
+        scope = {
+            "type": "http",
+            "client": ("testclient", 50000),
+            "headers": [(b"x-forwarded-for", b"203.0.113.195")],
+        }
+        req = Request(scope)
+        assert limiter.get_client_ip(req) == "203.0.113.195"
+    finally:
+        settings.TRUSTED_PROXIES = original_trusted
+
+
+def test_cidr_untrusted_peer_ignores_forwarded_header():
+    """When peer is NOT within the trusted CIDR, X-Forwarded-For is ignored."""
+    from backend.app.rate_limiter import limiter
+    from starlette.requests import Request
+
+    original_trusted = settings.TRUSTED_PROXIES
+    try:
+        # Trust only 10.0.0.0/24 (peer is 192.168.1.50)
+        settings.TRUSTED_PROXIES = "10.0.0.0/24"
+
+        scope = {
+            "type": "http",
+            "client": ("192.168.1.50", 50000),
+            "headers": [(b"x-forwarded-for", b"8.8.8.8")],
+        }
+        req = Request(scope)
+        # Direct peer IP must be returned, spoofed header ignored
+        assert limiter.get_client_ip(req) == "192.168.1.50"
+    finally:
+        settings.TRUSTED_PROXIES = original_trusted
+
+
+def test_cidr_chained_forwarded_for_resolves_to_first_untrusted_hop():
+    """Walking right-to-left through trusted CIDRs stops at the real client."""
+    from backend.app.rate_limiter import limiter
+    from starlette.requests import Request
+
+    original_trusted = settings.TRUSTED_PROXIES
+    try:
+        # Trust 10.0.0.0/8 and 172.16.0.0/12
+        settings.TRUSTED_PROXIES = "testclient, 10.0.0.0/8, 172.16.0.0/12"
+
+        # Chain: real_client (198.51.100.22), edge_proxy (172.16.1.5), internal_lb (10.0.1.2)
+        chain = b"198.51.100.22, 172.16.1.5, 10.0.1.2"
+        scope = {
+            "type": "http",
+            "client": ("testclient", 50000),
+            "headers": [(b"x-forwarded-for", chain)],
+        }
+        req = Request(scope)
+        assert limiter.get_client_ip(req) == "198.51.100.22"
+    finally:
+        settings.TRUSTED_PROXIES = original_trusted
+
+

@@ -142,7 +142,7 @@ def parse_document(content: bytes, filename: str) -> List[Dict[str, Union[int, s
     ext = Path(filename).suffix.lower()
     if ext == ".pdf":
         return extract_pages_from_pdf(content, filename)
-    elif ext in [".docx", ".doc"]:
+    elif ext == ".docx":
         return extract_pages_from_docx(content, filename)
     elif ext in [".txt", ".md", ".markdown"]:
         return extract_pages_from_txt(content, filename)

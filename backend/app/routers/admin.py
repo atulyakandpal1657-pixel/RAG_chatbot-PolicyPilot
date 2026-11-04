@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
-ALLOWED_EXTENSIONS = {".pdf", ".docx", ".doc", ".txt", ".md"}
+ALLOWED_EXTENSIONS = {".pdf", ".docx", ".txt", ".md"}
 
 
 def verify_admin_password(
@@ -147,11 +147,11 @@ async def upload_documents(
 
     for file in files:
         filename = Path(file.filename or "unknown").name
+        # Validation: raises HTTP 400 for unsupported extension and HTTP 413 for oversized file
+        content = await read_upload_file_safely(file, settings.MAX_UPLOAD_SIZE_BYTES)
+        file_size = len(content)
         doc_id = None
         try:
-            content = await read_upload_file_safely(file, settings.MAX_UPLOAD_SIZE_BYTES)
-            file_size = len(content)
-
             # 1. Parse document into pages
             pages = parse_document(content, filename)
             page_count = len(pages)
@@ -195,20 +195,6 @@ async def upload_documents(
                 "chunk_count": len(chunks)
             })
 
-        except HTTPException as he:
-            logger.warning(f"Validation failure for upload {filename}: {he.detail}")
-            if doc_id:
-                try:
-                    vector_store.delete_by_doc_id(doc_id)
-                    vector_store.delete_by_filename(filename)
-                    delete_document(doc_id)
-                except Exception:
-                    pass
-            results.append({
-                "filename": filename,
-                "status": "failed",
-                "error": he.detail
-            })
         except EmbeddingError as ee:
             logger.error(f"Embedding failure during upload of {filename}: {ee}")
             if doc_id:

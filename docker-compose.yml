@@ -8,6 +8,8 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - APP_ENV=${APP_ENV:-production}
+      - DEMO_MODE=${DEMO_MODE:-true}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
       # Model names: see https://ai.google.dev/gemini-api/docs/models

@@ -2,21 +2,59 @@ import ipaddress
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Dict, List, Set
+from typing import Any, Dict, List, Union
 from fastapi import HTTPException, Request, status
 from backend.app.config import settings
 
 logger = logging.getLogger(__name__)
 
+TrustedProxyItem = Union[ipaddress.IPv4Network, ipaddress.IPv6Network, str]
 
-def parse_trusted_proxies(trusted_proxies_str: str) -> Set[str]:
-    """Parses a comma-separated list of trusted proxy IPs or hostnames."""
-    proxies = set()
+
+def parse_trusted_proxies(trusted_proxies_str: str) -> List[TrustedProxyItem]:
+    """
+    Parses a comma-separated list of trusted proxy IPs, CIDR networks, or hostnames.
+    Wildcard ranges ('*' or '/0') are strictly disallowed.
+    """
+    proxies: List[TrustedProxyItem] = []
     for item in trusted_proxies_str.split(","):
         cleaned = item.strip()
-        if cleaned:
-            proxies.add(cleaned)
+        if not cleaned:
+            continue
+        if cleaned == "*":
+            raise ValueError("Wildcard trusted proxy '*' is not permitted.")
+        try:
+            # Parses exact IP (e.g. 127.0.0.1 -> 127.0.0.1/32) or CIDR (e.g. 10.0.0.0/24)
+            net = ipaddress.ip_network(cleaned, strict=False)
+            if net.prefixlen == 0:
+                raise ValueError(f"Wildcard trusted proxy range '{cleaned}' (/0) is not permitted.")
+            proxies.append(net)
+        except ValueError as ve:
+            if "not permitted" in str(ve):
+                raise
+            # Hostname fallback (e.g. 'testclient' or local hostname)
+            proxies.append(cleaned)
     return proxies
+
+
+def is_trusted_peer(ip_or_host: str, trusted_items: List[TrustedProxyItem]) -> bool:
+    """
+    Checks if an IP or hostname matches any trusted exact IP, CIDR network, or hostname.
+    """
+    try:
+        ip_obj = ipaddress.ip_address(ip_or_host)
+        for item in trusted_items:
+            if isinstance(item, (ipaddress.IPv4Network, ipaddress.IPv6Network)):
+                if ip_obj.version == item.version and ip_obj in item:
+                    return True
+            elif isinstance(item, str) and item == ip_or_host:
+                return True
+        return False
+    except ValueError:
+        for item in trusted_items:
+            if isinstance(item, str) and item == ip_or_host:
+                return True
+        return False
 
 
 class RateLimiter:
@@ -42,7 +80,7 @@ class RateLimiter:
         trusted_proxies = parse_trusted_proxies(settings.TRUSTED_PROXIES)
 
         # If peer is untrusted, strictly use peer IP (ignore any forged headers)
-        if peer_ip not in trusted_proxies:
+        if not is_trusted_peer(peer_ip, trusted_proxies):
             return peer_ip
 
         # If peer is a trusted proxy, parse X-Forwarded-For chain
@@ -54,7 +92,7 @@ class RateLimiter:
         # Walking right-to-left, find the first IP that is not a trusted proxy
         parts = [p.strip() for p in forwarded_for.split(",") if p.strip()]
         for ip in reversed(parts):
-            if ip not in trusted_proxies:
+            if not is_trusted_peer(ip, trusted_proxies):
                 try:
                     # Validate that it is a parseable IP address
                     ipaddress.ip_address(ip)

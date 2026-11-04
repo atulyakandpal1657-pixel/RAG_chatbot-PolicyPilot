@@ -96,7 +96,7 @@ def test_demo_mode_blocks_mutating_routes():
 
 
 def test_upload_protections_size_and_extension():
-    """Upload checks extension whitelist and maximum upload size."""
+    """Upload checks extension whitelist and maximum upload size, returning HTTP 400 and 413."""
     original_demo_mode = settings.DEMO_MODE
     original_password = settings.ADMIN_PASSWORD
     test_password = "test_valid_admin_password_123"
@@ -106,26 +106,27 @@ def test_upload_protections_size_and_extension():
         settings.ADMIN_PASSWORD = test_password
         headers = {"X-Admin-Password": test_password}
 
-        # 1. Invalid extension (.exe)
+        # 1. Invalid extension (.exe) -> HTTP 400
         bad_file = ("malware.exe", io.BytesIO(b"binary content"), "application/octet-stream")
         resp_ext = client.post("/api/admin/upload", headers=headers, files={"files": bad_file})
-        assert resp_ext.status_code == 200  # Multi-file handler catches per-file error and returns result dict
-        results = resp_ext.json().get("uploaded", [])
-        assert len(results) == 1
-        assert results[0]["status"] == "failed"
-        assert "Unsupported file format" in results[0]["error"]
+        assert resp_ext.status_code == 400
+        assert "Unsupported file format '.exe'" in resp_ext.json()["detail"]
 
-        # 2. Oversized file (> MAX_UPLOAD_SIZE_BYTES)
+        # 2. Unsupported legacy extension (.doc) -> HTTP 400
+        doc_file = ("legacy.doc", io.BytesIO(b"doc content"), "application/msword")
+        resp_doc = client.post("/api/admin/upload", headers=headers, files={"files": doc_file})
+        assert resp_doc.status_code == 400
+        assert "Unsupported file format '.doc'" in resp_doc.json()["detail"]
+
+        # 3. Oversized file (> MAX_UPLOAD_SIZE_BYTES) -> HTTP 413
         original_max_size = settings.MAX_UPLOAD_SIZE_BYTES
         try:
             settings.MAX_UPLOAD_SIZE_BYTES = 100  # Set limit to 100 bytes for test
             oversized_data = b"x" * 200
             oversized_file = ("large.pdf", io.BytesIO(oversized_data), "application/pdf")
             resp_size = client.post("/api/admin/upload", headers=headers, files={"files": oversized_file})
-            results_size = resp_size.json().get("uploaded", [])
-            assert len(results_size) == 1
-            assert results_size[0]["status"] == "failed"
-            assert "exceeds maximum allowed size" in results_size[0]["error"]
+            assert resp_size.status_code == 413
+            assert "exceeds maximum allowed size" in resp_size.json()["detail"]
         finally:
             settings.MAX_UPLOAD_SIZE_BYTES = original_max_size
 

@@ -32,9 +32,9 @@ class Settings(BaseSettings):
 
     # Gemini (model names sourced from https://ai.google.dev/gemini-api/docs/models)
     GEMINI_API_KEY: str = ""
-    GEMINI_LLM_MODEL: str = "gemini-3.6-flash"
+    GEMINI_LLM_MODEL: str = "gemini-flash-lite-latest"
     GEMINI_FALLBACK_MODELS: str = "gemini-3.5-flash,gemini-3.6-flash,gemini-flash-lite-latest"
-    GEMINI_JUDGE_MODEL: str = "gemini-3.6-flash"
+    GEMINI_JUDGE_MODEL: str = "gemini-flash-lite-latest"
     GEMINI_EMBEDDING_MODEL: str = "gemini-embedding-001"
 
     # OpenAI
@@ -133,6 +133,13 @@ class Settings(BaseSettings):
                 raise ValueError(
                     f"In production, ADMIN_PASSWORD must be at least {MIN_ADMIN_PASSWORD_LENGTH} characters."
                 )
+
+        # 4. TRUSTED_PROXIES wildcard validation
+        if self.TRUSTED_PROXIES:
+            for item in self.TRUSTED_PROXIES.split(","):
+                cleaned = item.strip()
+                if cleaned in ("*", "0.0.0.0/0", "::/0"):
+                    raise ValueError(f"Wildcard trusted proxy '{cleaned}' is not permitted.")
 
         return self
 
