@@ -115,3 +115,4 @@ def test_daily_request_cap_triggers_429():
         assert "Daily demo request quota exceeded" in resp.json()["detail"]
     finally:
         settings.DAILY_REQUEST_CAP = original_cap
+

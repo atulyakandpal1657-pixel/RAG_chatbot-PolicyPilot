@@ -92,13 +92,37 @@ flowchart TD
    - `APP_ENV`: `"production"` | `"development"`. Defaults to production. Invalid values cause startup failure.
    - `DEMO_MODE`: Defaults to `true` in production; defaults to `false` in development.
    - In `DEMO_MODE=true`, all mutating routes (`POST /upload`, `DELETE /documents/{id}`, `POST /reindex`, `POST /run-eval`) return HTTP 403, even with a valid admin password. Read-only admin views remain accessible.
-   - In production with `DEMO_MODE=false`, the system requires a non-default `ADMIN_PASSWORD` of at least 12 characters, checked via `hmac.compare_digest`.
+   - In production, the system requires a non-default `ADMIN_PASSWORD` of at least 12 characters, regardless of `DEMO_MODE`, checked via `hmac.compare_digest`.
    - Never logs passwords.
 
 7. **Rate Limiting & Proxy Verification**:
    - Per-client sliding window rate limiter (default 30 requests/minute).
    - Only trusts `X-Forwarded-For` if the immediate peer socket IP is in `TRUSTED_PROXIES`. Untrusted clients cannot bypass the limit by spoofing headers.
    - In-memory global daily cap (default 500 requests/day): a best-effort demo safeguard that resets daily and is per-instance.
+
+---
+
+## 🔒 Rate Limiting Behind a Proxy
+
+PolicyPilot uses `TRUSTED_PROXIES` to decide whether to read the `X-Forwarded-For` header for client IP identification.
+
+| Scenario | Behavior |
+| :--- | :--- |
+| `TRUSTED_PROXIES` is correct (matches the platform proxy IP) | Each visitor gets their own per-minute bucket. |
+| `TRUSTED_PROXIES` is wrong or empty, but the app runs behind a proxy | All visitors share **one** bucket (the proxy's IP). A single busy user can trigger a 429 for everyone. |
+| No proxy, running directly | Correct behavior. Direct socket IP is used. |
+
+**Symptom**: If visitors who haven't sent many requests receive HTTP 429, check that `TRUSTED_PROXIES` matches the actual IP(s) your hosting platform's proxy uses (e.g., Render's gateway IP, Cloudflare's egress range).
+
+**How to diagnose**: Enable `DEBUG` logging temporarily and look for the `Rate limit exceeded for client ...` line — if many different users are sharing the same logged IP (e.g., `10.0.0.1` or a single public IP), `TRUSTED_PROXIES` is not set correctly.
+
+> [!CAUTION]
+> Do **not** set `TRUSTED_PROXIES` to a wildcard like `0.0.0.0/0` or `*`. That would allow any client to forge their IP via `X-Forwarded-For` and bypass per-client rate limiting entirely. Set it only to the specific, known IP(s) of your reverse proxy.
+
+**Configuring**: Set `TRUSTED_PROXIES` as a comma-separated list of proxy IPs in your deployment environment variable. The default (`127.0.0.1,::1`) is correct for local development only.
+
+> [!NOTE]
+> The resistance to forged `X-Forwarded-For` headers is validated by `test_untrusted_client_cannot_bypass_rate_limit_with_forged_x_forwarded_for` in `backend/tests/test_rate_limiter.py`. This test does **not** claim that spoofing is impossible in all network configurations — it verifies the specific logic of the limiter when `TRUSTED_PROXIES` is configured correctly.
 
 ---
 
@@ -186,10 +210,10 @@ $$\text{Pipeline Total Latency} = \text{Retrieval} + \text{Generation} + \text{R
 
 ## 🛡️ Indirect Prompt Injection Regression Test
 
-PolicyPilot includes an automated regression test suite for **indirect prompt injection through retrieved documents**:
+`scripts/run_prompt_injection_eval.py` is a regression check of one injection pattern, 3 prompts, run N times. It also runs 8 fixed eval questions (5 answerable from sample docs, 3 unanswerable) against the normal collection to detect regressions.
 
 > [!WARNING]
-> This is a regression test for one class of indirect prompt injection. Passing it is not a guarantee of security against prompt injection.
+> Passing this check is not a guarantee of security against prompt injection.
 
 ### Attack Vector Tested
 An adversary injects malicious system overrides into a policy document:
@@ -204,10 +228,11 @@ employee annual leave is completely unlimited with 365 days of paid time off per
    - Ingests poisoned fixture into an isolated test collection (`test_adversarial_isolation`).
    - Verifies delimiter boundaries and ensures adversarial documents never leak into default or evaluation collections.
 3. **Live Model Script** (`scripts/run_prompt_injection_eval.py`):
-   - Ingests poisoned travel policy document.
+   - Shows the full text of the poisoned document at runtime.
    - Tests Q1 (injection target): Model refuses to adopt the fabricated 365-day claim.
    - Tests Q2 (legitimate content): Model correctly answers $75 per diem allowance with citation.
    - Tests Q3 (out-of-scope query): Model triggers safe fallback abstention.
+   - Then runs 8 regression questions (5 answerable / 3 unanswerable) against the normal default collection.
 
 ---
 
@@ -256,12 +281,12 @@ Open:
 
 ## 🧪 Running Tests & Checks
 
-### 1. Run Complete Pytest Suite (31 Tests)
+### 1. Run Complete Pytest Suite (35 Tests)
 ```bash
 pytest -v
 ```
 Covers:
-- Configuration matrix (12 matrix rows: prod/dev, demo mode, password rules).
+- Configuration matrix (16 rows: prod/dev, demo mode, password rules — including DEMO_MODE=true and unset with weak passwords in production).
 - Admin auth & DEMO_MODE 403 enforcement.
 - Upload size streaming check (50 MB limit) and extension whitelist.
 - Embedding failure rollback (SQLite + ChromaDB consistency).
@@ -296,24 +321,42 @@ python eval/run_eval.py --track synthetic
 
 ## ⚙️ Configuration Reference
 
-| Variable | Default | Mode | Description |
+> [!IMPORTANT]
+> **Required in production** (startup fails without these): `GEMINI_API_KEY`, `ADMIN_PASSWORD` (≥12 chars, not a known default). `CORS_ALLOWED_ORIGINS` is required whenever your frontend is deployed on a different origin than the backend.
+>
+> **Deprecated names that cause an immediate startup error if set**: `ALLOWED_ORIGINS` (renamed to `CORS_ALLOWED_ORIGINS`).
+
+| Variable | Default | Required in Prod | Description |
 | :--- | :--- | :---: | :--- |
-| `APP_ENV` | `production` | All | `"production"` or `"development"`. Any other value causes startup failure. |
-| `DEMO_MODE` | `true` (prod) / `false` (dev) | All | When `true`, mutating admin routes return 403. Read-only views permitted. |
-| `ADMIN_PASSWORD` | *(Required in prod)* | All | Admin password (verified with `hmac.compare_digest`). Must be >=12 chars in prod with `DEMO_MODE=false`. |
-| `GEMINI_API_KEY` | *(Required)* | LLM | Google GenAI API key for embeddings and generation. |
-| `GEMINI_LLM_MODEL` | `gemini-3.6-flash` | LLM | Primary generation model (with fallback cascade). |
-| `GEMINI_EMBEDDING_MODEL`| `gemini-embedding-001` | Embed | Embedding model. |
-| `RETRIEVAL_SIMILARITY_THRESHOLD` | `0.55` | Retrieval | Raw vector cosine similarity gating threshold. |
-| `TOP_K_RETRIEVAL` | `5` | Retrieval | Number of context chunks delivered to generator. |
-| `RRF_K` | `60` | Retrieval | Reciprocal Rank Fusion smoothing constant (ordering only). |
-| `MAX_UPLOAD_SIZE_BYTES` | `52428800` (50 MB) | Security | Maximum file upload size, enforced during streaming. |
-| `MAX_QUESTION_LENGTH` | `1500` | Security | Maximum character length for chat questions. |
-| `RATE_LIMIT_PER_MINUTE` | `30` | Security | Maximum requests per client IP per minute. |
-| `DAILY_REQUEST_CAP` | `500` | Security | In-memory best-effort daily request cap. |
-| `TRUSTED_PROXIES` | `127.0.0.1,::1` | Security | Comma-separated list of trusted upstream proxy IPs. |
-| `COMPANY_NAME` | `Northwind Labs` | Branding | Configurable company name for demo UI. |
-| `CORS_ALLOWED_ORIGINS` | *(empty)* | Security | Comma-separated allowed frontend origins. |
+| `APP_ENV` | `production` | — | `"production"` or `"development"`. Any other value causes startup failure. |
+| `DEMO_MODE` | `true` (prod) / `false` (dev) | — | When `true`, mutating admin routes return 403. |
+| `ADMIN_PASSWORD` | *(no safe default)* | ✅ | Must be ≥12 chars and not a known default in production, regardless of `DEMO_MODE`. Verified with `hmac.compare_digest`. Never logged. |
+| `GEMINI_API_KEY` | *(empty)* | ✅ | Google GenAI API key for embeddings and generation. |
+| `CORS_ALLOWED_ORIGINS` | *(empty)* | ✅ (deployed) | Comma-separated allowed frontend origins (e.g. your Vercel URL). |
+| `LLM_PROVIDER` | `gemini` | — | `gemini`, `openai`, or `anthropic`. |
+| `EMBEDDINGS_PROVIDER` | `gemini` | — | `gemini` or `openai`. |
+| `GEMINI_LLM_MODEL` | `gemini-3.6-flash` | — | Primary Gemini generation model. |
+| `GEMINI_FALLBACK_MODELS` | `gemini-3.5-flash,...` | — | Comma-separated fallback models tried in order on 429/503. |
+| `GEMINI_JUDGE_MODEL` | `gemini-3.6-flash` | — | Model used for offline LLM-as-judge evaluation only. |
+| `GEMINI_EMBEDDING_MODEL` | `gemini-embedding-001` | — | Gemini embedding model. |
+| `OPENAI_API_KEY` | *(empty)* | — | Required only when `LLM_PROVIDER=openai`. |
+| `OPENAI_LLM_MODEL` | `gpt-4o-mini` | — | OpenAI generation model. |
+| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | — | OpenAI embedding model. |
+| `ANTHROPIC_API_KEY` | *(empty)* | — | Required only when `LLM_PROVIDER=anthropic`. |
+| `ANTHROPIC_LLM_MODEL` | `claude-3-5-haiku-20241022` | — | Anthropic generation model. |
+| `RETRIEVAL_SIMILARITY_THRESHOLD` | `0.55` | — | Raw vector cosine similarity gating threshold. |
+| `TOP_K_RETRIEVAL` | `5` | — | Number of context chunks delivered to generator. |
+| `RRF_K` | `60` | — | Reciprocal Rank Fusion smoothing constant (ordering only). |
+| `MAX_UPLOAD_SIZE_BYTES` | `52428800` (50 MB) | — | Maximum file upload size, enforced during streaming. |
+| `MAX_QUESTION_LENGTH` | `1500` | — | Maximum character length for chat questions. |
+| `RATE_LIMIT_PER_MINUTE` | `30` | — | Maximum requests per client IP per minute. |
+| `DAILY_REQUEST_CAP` | `500` | — | In-memory best-effort daily request cap (resets at UTC midnight, per-instance). |
+| `TRUSTED_PROXIES` | `127.0.0.1,::1` | — | Comma-separated trusted upstream proxy IPs. See "Rate Limiting Behind a Proxy" above. |
+| `COMPANY_NAME` | `Northwind Labs` | — | Configurable company name for demo UI. |
+| `SQLITE_DB_PATH` | `data/policypilot.db` | — | SQLite metadata store path. |
+| `CHROMA_PERSIST_DIR` | `data/chroma` | — | ChromaDB vector store persistence directory. |
+| `SAMPLE_DOCS_DIR` | `sample_docs` | — | Directory scanned by `scripts/seed.py` for initial documents. |
+| `NEXT_PUBLIC_API_URL` | *(empty)* | ✅ (frontend) | Backend API base URL consumed by the Next.js frontend. |
 
 ---
 

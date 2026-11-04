@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.bm25_store import get_bm25_store
 from backend.app.config import settings
 from backend.app.db import init_db
+from backend.app.rate_limiter import parse_trusted_proxies
 from backend.app.routers import admin, chat
 
 logging.basicConfig(
@@ -24,6 +25,20 @@ async def lifespan(app: FastAPI):
     logger.info("Rebuilding BM25 index from SQLite chunks...")
     bm25 = get_bm25_store()
     bm25.rebuild()
+
+    # Rate limiter / proxy startup log (never logs client IPs)
+    trusted = parse_trusted_proxies(settings.TRUSTED_PROXIES)
+    n_proxies = len(trusted)
+    if n_proxies > 0:
+        logger.info(
+            f"Rate limiter: {n_proxies} trusted proxy/proxies configured. "
+            "X-Forwarded-For headers will be used for client IP identification."
+        )
+    else:
+        logger.info(
+            "Rate limiter: No trusted proxies configured. "
+            "Per-client limiting uses direct socket IP; X-Forwarded-For is ignored."
+        )
 
     logger.info("PolicyPilot backend is ready to accept requests.")
     yield

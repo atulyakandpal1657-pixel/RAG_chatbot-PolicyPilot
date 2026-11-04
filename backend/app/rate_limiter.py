@@ -117,3 +117,4 @@ limiter = RateLimiter()
 def rate_limit_chat(request: Request) -> None:
     """FastAPI dependency for rate limiting."""
     limiter.check_rate_limit(request)
+

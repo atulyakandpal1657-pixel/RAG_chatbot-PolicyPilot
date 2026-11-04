@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional, Union
+import os
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -85,6 +86,17 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_env_and_security(self) -> "Settings":
+        # 0. Deprecated env var guard — fail clearly instead of silently ignoring old names
+        _deprecated = {
+            "ALLOWED_ORIGINS": "CORS_ALLOWED_ORIGINS",
+        }
+        for old_name, new_name in _deprecated.items():
+            if os.environ.get(old_name) is not None:
+                raise ValueError(
+                    f"Environment variable '{old_name}' is deprecated. "
+                    f"Rename it to '{new_name}' in your deployment configuration."
+                )
+
         # 1. APP_ENV validation
         env_raw = (self.APP_ENV or "production").strip().lower()
         if env_raw not in ("production", "development"):
@@ -108,20 +120,19 @@ class Settings(BaseSettings):
             raise ValueError(f"Invalid DEMO_MODE type: {type(self.DEMO_MODE)}. Must be boolean or 'true'/'false'.")
 
         # 3. Production Password & Strength checks
+        # All rules apply unconditionally in production, regardless of DEMO_MODE.
         if self.APP_ENV == "production":
             pwd = (self.ADMIN_PASSWORD or "").strip()
             if not pwd:
                 raise ValueError("ADMIN_PASSWORD must be configured and cannot be empty in production.")
-
-            if not self.DEMO_MODE:
-                if pwd in KNOWN_DEFAULT_PASSWORDS:
-                    raise ValueError(
-                        "In production with DEMO_MODE=false, ADMIN_PASSWORD cannot be a known default placeholder."
-                    )
-                if len(pwd) < MIN_ADMIN_PASSWORD_LENGTH:
-                    raise ValueError(
-                        f"In production with DEMO_MODE=false, ADMIN_PASSWORD must be at least {MIN_ADMIN_PASSWORD_LENGTH} characters."
-                    )
+            if pwd in KNOWN_DEFAULT_PASSWORDS:
+                raise ValueError(
+                    "In production, ADMIN_PASSWORD cannot be a known default placeholder."
+                )
+            if len(pwd) < MIN_ADMIN_PASSWORD_LENGTH:
+                raise ValueError(
+                    f"In production, ADMIN_PASSWORD must be at least {MIN_ADMIN_PASSWORD_LENGTH} characters."
+                )
 
         return self
 
