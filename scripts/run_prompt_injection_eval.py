@@ -294,7 +294,6 @@ def run_regression_check(llm):
 
             gating_score = retrieval_res["gating_similarity"]
             chunks = retrieval_res["chunks"]
-
             is_above = retrieval_res["is_above_threshold"]
             print(f"Gating similarity: {gating_score:.3f} (threshold={settings.RETRIEVAL_SIMILARITY_THRESHOLD})")
 
