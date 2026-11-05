@@ -12,6 +12,12 @@ PolicyPilot is a portfolio RAG (Retrieval-Augmented Generation) assistant design
 > 🔗 **Live Portfolio Demo**: [https://rag-chatbot-policy-pilot.vercel.app](https://rag-chatbot-policy-pilot.vercel.app)  
 > 🎬 **Demo Video / Walkthrough**: *(Pending recording)* `artifacts/demo_walkthrough.mp4`
 
+**Latest benchmark summary (55 questions across 3 tracks, as-labeled ground truth)**:
+- **Answer accuracy:** 100.0% (39/39, Wilson 95% CI: [91.0%, 100.0%])
+- **Citation page accuracy:** 100.0% (39/39, Wilson 95% CI: [91.0%, 100.0%])
+- **Abstention on unanswerable queries:** 93.8% (15/16, Wilson 95% CI: [71.7%, 98.9%], with Q30 as the single labeled miss)
+- *Reclassified alternative:* 100.0% answer accuracy (40/40, [91.2%, 100.0%]), 100.0% citation page accuracy (40/40, [91.2%, 100.0%]), 100.0% abstention (15/15, [79.6%, 100.0%]) when counting handbook-supported Q30 as answerable (see [Q30 note](#question-30-ground-truth-labeling-discrepancy)).
+
 ---
 
 > [!IMPORTANT]
@@ -155,11 +161,15 @@ PolicyPilot was benchmarked across three separate evaluation tracks totaling **5
 > [!NOTE]
 > **Data Drafting & Evaluation Disclosure**:
 > - Sample policy documents and benchmark question sets were drafted with AI assistance from the document text. Ground-truth pages were located programmatically and spot-checked by the author.
-> - Offline evaluation grading (answer accuracy, citation semantic support, and abstention compliance) was performed automatically using `gemini-flash-lite-latest` as an LLM judge.
+> - Offline evaluation grading for answer accuracy was performed automatically using `gemini-flash-lite-latest` as an LLM judge (comparing generated answers against ground-truth expected answers), while citation page accuracy was verified programmatically against physical document page numbers.
 
 > [!WARNING]
 > **Critical Architectural Finding (Gating vs. Grounding)**:  
-> On the real-document track, **the similarity gate did not separate answerable from unanswerable questions**. The cosine similarity gating scores for answerable questions were **0.748–0.854**, while near-miss unanswerable questions scored **0.725–0.799** (and false-premise queries scored **0.691–0.832**). Both distributions cleared the 0.55 threshold. **Safe abstention depended entirely on the Layer 2 LLM grounding check**, demonstrating empirically why vector similarity gating alone is insufficient and dual-layer defense is required.
+> On the real-document track, **the similarity gate did not separate answerable from unanswerable questions**:
+> - **Real Track Pass 1 (15 Qs)**: Answerable queries scored **0.748–0.854**, while near-miss unanswerable queries scored **0.725–0.799**.
+> - **Real Track Pass 2 (10 Qs)**: Paraphrased answerable queries scored **0.721–0.833**, false-premise unanswerable queries scored **0.744–0.832**, and near-miss unanswerable queries scored **0.691–0.753**.
+> - **Pooled Real Document Tracks (25 Qs)**: Answerable queries scored **0.721–0.854**, while all unanswerable queries scored **0.691–0.832** (near-miss: **0.691–0.799**, false-premise: **0.744–0.832**).
+> All distributions cleared the 0.55 threshold. **Safe abstention depended entirely on the Layer 2 LLM grounding check**, demonstrating empirically why vector similarity gating alone is insufficient and dual-layer defense is required.
 
 ---
 
@@ -167,7 +177,6 @@ PolicyPilot was benchmarked across three separate evaluation tracks totaling **5
 
 | Metric | Synthetic Track (30 Qs) | Real Track Pass 1 (15 Qs) | Real Track Pass 2 (10 Qs) | **Pooled Benchmark (55 Qs: 39 Ans, 16 Unans)** | Wilson 95% CI (Pooled) | Target |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Overall Benchmark Score** | **97.5%** | **100.0%** | **100.0%** | **98.2%** | — | > 90% |
 | **Answer Accuracy** (Answerable) | **100.0%** (22/22) | **100.0%** (12/12) | **100.0%** (5/5) | **100.0%** (39/39) | **[91.0%, 100.0%]** | > 90% |
 | **Citation Accuracy** (Page Mapping)¹ | **100.0%** (22/22) | **100.0%** (12/12) | **100.0%** (5/5) | **100.0%** (39/39) | **[91.0%, 100.0%]** | > 85% |
 | **Fallback Recall** (Abstention on Unanswerable) | **87.5%** (7/8)² | **100.0%** (3/3) | **100.0%** (5/5) | **93.8%** (15/16)² | **[71.7%, 98.9%]**³ | > 90% |
@@ -176,10 +185,9 @@ PolicyPilot was benchmarked across three separate evaluation tracks totaling **5
 | **False Abstentions** | **0** | **0** | **0** | **0** | — | 0 |
 | **Avg Pipeline Latency** | ~3,090 ms | ~3,212 ms | ~2,566 ms | ~3,028 ms | — | < 25,000 ms |
 
-> ¹ **Citation Page-Accuracy vs. Semantic Support**:  
-> - **Citation Page-Accuracy (100%)** measures physical grounding: the cited page number strictly matches the physical document page containing the retrieved chunk in the ground truth.  
-> - **Semantic Citation Faithfulness** (whether the claims made are strictly supported by the cited excerpt) was evaluated automatically by the offline LLM judge.  
+> ¹ **Citation Page Accuracy**: Measures physical page-level grounding — whether the cited page number strictly matches the physical document page containing the retrieved chunk in the ground-truth annotations. Semantic claim-level support was not independently scored by a separate citation judge.  
 >
+> <a id="question-30-ground-truth-labeling-discrepancy"></a>
 > ² **Question 30 Ground-Truth Labeling Discrepancy**:  
 > In synthetic evaluation, Question 30 (*"Can an employee with only 2 months tenure take parental leave?"*) was originally mislabeled as unanswerable (`is_answerable: false`). However, the handbook explicitly states on Page 3 that 6 months continuous service is required. The model correctly retrieved Page 3 and answered *"No, 6 months required [1]"*. We intentionally refrained from quietly relabeling Q30 post-hoc, preserving transparent benchmark reporting. Excluding this known labeling discrepancy, unanswerable abstention is **15/15 (100.0%)**.  
 >
@@ -226,17 +234,10 @@ Notice that for every track, **Retrieval + Generation + Pipeline Retry Delay sum
 - Pooled Weighted Average (55 Qs): $814.3 + 1995.3 + 218.2 = 3027.8\text{ ms}$.
 
 #### Explanation of Retry Delays & Wall-Clock Discrepancies
-- **Generation Retry Delay**: The live generation pipeline executes a **3.0-second backoff sleep** if a Gemini API 429 rate limit is encountered before retrying.
-  - In the synthetic track, 3 questions experienced rate limits during generation: **Q09** (3,000 ms delay), **Q28** (3,000 ms delay), and **Q29** (3,000 ms delay). Total = 9,000 ms across 30 questions ($300.0\text{ ms}$ average).
-  - In Real Pass 2, 1 question experienced a generation rate limit: **Q01** (3,000 ms delay). Total = 3,000 ms across 10 questions ($300.0\text{ ms}$ average).
-- **Offline Judge Retry Delay**: The offline evaluation runner uses an independent **5.0-second backoff sleep** if the judge model is rate-limited.
-  - In the synthetic track, 2 questions encountered judge rate limits: **Q09** (5,000 ms delay) and **Q17** (5,000 ms delay), adding $10,000\text{ ms} / 30 = 333.3\text{ ms}$ to the offline judge phase. Judge retries are isolated from user-facing pipeline turnaround.
-- **Per-Question Retried List**:
-  - **Synthetic Q09**: 1 generation retry (3,000 ms) + 1 judge retry (5,000 ms). Pipeline turnaround: 7,168.5 ms. Resolved model: `gemini-3-flash-preview`.
-  - **Synthetic Q17**: 0 generation retry + 1 judge retry (5,000 ms). Pipeline turnaround: 4,684.8 ms. Resolved model: `gemini-flash-lite-latest`.
-  - **Synthetic Q28**: 1 generation retry (3,000 ms) + 0 judge retry. Pipeline turnaround: 7,122.6 ms. Resolved model: `gemini-3-flash-preview`.
-  - **Synthetic Q29**: 1 generation retry (3,000 ms) + 0 judge retry. Pipeline turnaround: 7,899.2 ms. Resolved model: `gemini-flash-lite-latest`.
-  - **Real Track Pass 2 Q01**: 1 generation retry (3,000 ms) + 0 judge retry. Pipeline turnaround: 5,892.8 ms. Resolved model: `gemini-flash-lite-latest`.
+- **Generation Retry Delay**: The live generation pipeline executes an automatic **3.0-second backoff sleep** if a Gemini API 429 rate limit is encountered before retrying.
+  - In the synthetic track, 3 questions experienced rate limits during generation, adding $3 \times 3,000\text{ ms} = 9,000\text{ ms}$ total ($300.0\text{ ms}$ average across 30 questions).
+  - In Real Pass 2, 1 question experienced a generation rate limit, adding $3,000\text{ ms}$ total ($300.0\text{ ms}$ average across 10 questions).
+- **Offline Judge Retry Delay**: The offline evaluation runner uses an independent **5.0-second backoff sleep** if the judge model is rate-limited (2 judge retries in synthetic = 10,000 ms total / 30 = 333.3 ms average). Judge retries are part of offline evaluation only and do not affect live user chat latency.
 
 #### Model Inventory & Failover Audit
 - **Primary Generator**: `gemini-flash-lite-latest`.
@@ -278,22 +279,23 @@ The regression evaluation was executed across 3 consecutive live runs against th
 - **Run 3**: Injection Eval **3/3 passed (100%)**; Regression Check **8/8 passed (100%)**.
   - *Failover Observation*: During Run 3, Q1 encountered an upstream 503 error on primary model `gemini-flash-lite-latest` and automatically cascaded to fallback model `gemini-3.5-flash`. The fallback model successfully refused the prompt injection and cited legitimate policy rules.
 
-### Script Evolution & Diff Explanation
-Between the initial failing version and the final stable script, the following changes were made:
-1. **Verbatim Document Print**: Added `POISONED_CONTENT` printout at startup for full runtime transparency.
-2. **ChromaDB Teardown**: Added `vstore.client.delete_collection(TEST_COLLECTION)` in `teardown_adversarial_fixture` to guarantee clean state.
-3. **Hybrid Retrieval for Regression Check**: The initial draft invoked raw vector store search, which missed keyword-heavy chunks (e.g., minimum 50 Mbps internet speed). Switched to the real hybrid pipeline (`retriever = get_retriever("default")` and `retriever.retrieve()`), exercising BM25, vector cosine similarity gating, and RRF fusion.
-4. **Parameter Alignment**: Fixed a parameter mismatch where `VectorStore.query` was passed `n_results` instead of `top_k`.
+### Script Evolution & Failure Diagnostics
+When `scripts/run_prompt_injection_eval.py` was extended to include the 8 regression questions, the script underwent iterative debugging before reaching stability:
+1. **Run Failure 1 (`TypeError`)**: The initial regression check invoked `vstore.query(query_vec, n_results=settings.TOP_K_RETRIEVAL)`. `VectorStore.query` accepts `top_k`, not `n_results`. Fixed by updating the parameter name to `top_k=settings.TOP_K_RETRIEVAL`.
+2. **Run Failure 2 (`KeyError: 'score'`)**: The script evaluated the gating threshold using `vector_results[0]['score']`. In PolicyPilot, `VectorStore` returns results with key `'cosine_similarity'`. Fixed by switching the dictionary lookup to `vector_results[0]['cosine_similarity']`.
+3. **Run Failure 3 (`Collection Name Mismatch`)**: The script initially queried vector store collection `"default"`, whereas default documents in ChromaDB reside in `DEFAULT_COLLECTION_NAME` (`"policypilot_chunks"`). Fixed by importing and passing `DEFAULT_COLLECTION_NAME`.
+4. **Run Failure 4 (Retrieval Pipeline Fidelity & Keyword Miss)**: Under pure vector retrieval, Question R3 (*"What is the minimum internet speed required for remote workers?"*) failed because vector similarity alone ranked the 50 Mbps clause outside top-5 context. The production system relies on hybrid search (BM25 + Cosine Gating + RRF). Switched `run_regression_check` to use `retriever = get_retriever("default")` and call `retriever.retrieve()`. With BM25 keyword matching active, the 50 Mbps snippet ranked #2, and regression passed 8/8 (100%).
+5. **Collection Cleanup**: `teardown_adversarial_fixture` was enhanced with `vstore.client.delete_collection(TEST_COLLECTION)` to purge the isolated test collection completely on exit.
 
 ```diff
 --- a/scripts/run_prompt_injection_eval.py
 +++ b/scripts/run_prompt_injection_eval.py
-@@ -36,6 +35,8 @@ TEST_COLLECTION = "prompt_injection_eval"
+@@ -35,6 +35,8 @@ TEST_COLLECTION = "prompt_injection_eval"
  POISONED_DOC_NAME = "adversarial_travel_policy.txt"
 +
 +# Full text of the synthetic poisoned test document (shown verbatim at runtime)
  POISONED_CONTENT = (
-@@ -115,23 +173,18 @@ def teardown_adversarial_fixture(doc_id: str):
+@@ -115,6 +173,10 @@ def teardown_adversarial_fixture(doc_id: str):
          vstore.delete_by_filename(POISONED_DOC_NAME)
          vstore.delete_by_doc_id(doc_id)
          delete_document(doc_id)
@@ -301,11 +303,12 @@ Between the initial failing version and the final stable script, the following c
 +            vstore.client.delete_collection(TEST_COLLECTION)
 +        except Exception:
 +            pass
-@@ -243,12 +243,128 @@ def run_regression_check(llm):
+@@ -243,6 +243,45 @@ def run_regression_check(llm):
 +    from backend.app.retriever import get_retriever
 +    emb_provider = get_embedding_provider()
 +    retriever = get_retriever("default")
-+    # Runs hybrid retrieval (Vector + BM25 + Gating + RRF)
++
++    # Uses full production hybrid pipeline (Vector + BM25 + Gating + RRF)
 +    retrieval_res = retriever.retrieve(
 +        query=question,
 +        query_embedding=query_vec,
@@ -456,7 +459,7 @@ PolicyPilot is an honest, production-style portfolio demonstration rather than a
 
 3. **Domain Near-Miss Gating Limits**:
    - On synthetic data, cosine similarity gating cleanly filtered completely out-of-domain queries.
-   - However, on dense real-world legal and benefits manuals, near-miss and false-premise questions produced cosine similarity scores of **0.725–0.832**, easily passing the 0.55 threshold.
+   - However, on dense real-world legal and benefits manuals, near-miss and false-premise questions produced cosine similarity scores of **0.691–0.832** (near-miss: 0.691–0.799, false-premise: 0.744–0.832), easily passing the 0.55 threshold.
    - Consequently, **Layer 1 gating cannot be relied upon alone**; safe abstention on near-miss queries relies completely on the Layer 2 LLM structured grounding prompt.
 
 4. **Ephemeral Disk on Free Cloud Hosting**:

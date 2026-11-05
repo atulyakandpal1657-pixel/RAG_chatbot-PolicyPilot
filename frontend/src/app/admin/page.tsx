@@ -519,6 +519,7 @@ export default function AdminPage() {
                   </p>
                   <p className="text-[10px] text-slate-500 mt-0.5">
                     {currentTrackData.combined.unanswerable_count} unanswerable questions
+                    {selectedTrack === "synthetic" && " (7/8 as-labeled; 7/7 excl. mislabeled Q30)"}
                   </p>
                 </div>
               </div>
